@@ -1,2 +1,2 @@
 # together
-Android even planning app
+Android event planning app
