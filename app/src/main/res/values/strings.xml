@@ -4,5 +4,16 @@
     <string name="app_name">together</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_id">1538853876367773</string>
+    <string name="title_activity_profile_info">ProfileInfoActivity</string>
+    <string name="title_activity_pick_friends">PickFriendsActivity</string>
+    <string name="title_activity_friend_picker">FriendPickerActivity</string>
+    <string name="exception">Exception: %1$s</string>
+    <string name="ok_button">OK</string>
+    <string name="need_perms_alert_text">In order to pick your friends you need to accept all the permissions on the following page.</string>
+    <string name="need_perms_alert_button_ok">OK</string>
+    <string name="need_perms_alert_button_quit">Quit</string>
+    <string name="title_activity_user_events">UserEventsActivity</string>
 
 </resources>
