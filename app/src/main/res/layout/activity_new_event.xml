@@ -29,4 +29,11 @@
         android:inputType="textMultiLine"
         android:hint="Details" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:id="@+id/nextButton"
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>

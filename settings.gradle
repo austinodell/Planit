@@ -1,1 +1,1 @@
-include ':app', ':FriendPickerSample', ':PlacePickerSample', ':facebook', ':HelloFacebookSample', ':RPSSample', ':SwitchUserSample', ':Scrumptious', ':MaterialDesign', ':MaterialDesignLibrary', ':library', ':FAB'
+include ':app', ':FriendPickerSample', ':PlacePickerSample', ':facebook', ':HelloFacebookSample', ':RPSSample', ':SwitchUserSample', ':Scrumptious', ':MaterialDesign', ':MaterialDesignLibrary', ':library', ':FAB', ':Parse-1.8.2', ':bolts-android-1.1.4'

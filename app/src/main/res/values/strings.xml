@@ -17,5 +17,8 @@
     <string name="title_activity_user_events">UserEventsActivity</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_new_event">NewEvent</string>
+    <string name="title_activity_add_friends">AddFriends</string>
+    <string name="title_activity_pick_date">PickDateActivity</string>
+    <string name="title_activity_date_picker">DatePickerActivity</string>
 
 </resources>
