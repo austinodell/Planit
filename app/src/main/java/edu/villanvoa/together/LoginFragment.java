@@ -17,11 +17,14 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 
 public class LoginFragment extends Fragment {
@@ -29,7 +32,8 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "MainFragment";
     private UiLifecycleHelper uiHelper;
     public GraphUser user;
-
+    List<ParseObject> userList; //Holds all users
+    ParseObject newEventObject; //Object to hold new event
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +59,10 @@ public class LoginFragment extends Fragment {
             public void onUserInfoFetched(GraphUser graphUser) {
                 LoginFragment.this.user = graphUser;
                 if (user != null) {
-                    if (user.asMap().get("email") != null)
+                    if (user.asMap().get("email") != null) {
                         Log.d(TAG, user.asMap().get("email").toString());
+                    }
+                    addUserToParse(user.getId());
                 }
             }
         });
@@ -120,4 +126,43 @@ public class LoginFragment extends Fragment {
             onSessionStateChange(session, state, exception);
         }
     };
+
+
+    private void getAllUsers() {
+        ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("Users");
+        try {
+            userList = queryAll.find();
+        } catch (ParseException e) {
+            Log.d(TAG, e.toString());
+        }
+    }
+
+    private boolean hasAccount(String facebookID) {
+        for (int i = 0; i < userList.size(); i++) {
+            if (userList.get(i).getString("FacebookID") == facebookID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void addUserToParse(final String facebookID) {
+        // checks to see if object exists in database
+        ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("User");
+        // where clause to see if it exists
+        userQuery.whereEqualTo("FacebookID", facebookID);
+        userQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject event, ParseException e) {
+                // retrieves object
+                if (event == null) {
+                    // if event hasn't been created, create new one
+                    Log.d(TAG, "Adding new user");
+                    newEventObject = new ParseObject("User");
+                    newEventObject.put("FacebookID", facebookID);
+                    // saves it to parse.com
+                    newEventObject.saveInBackground();
+                }
+            }
+        });
+    }
 }

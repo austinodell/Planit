@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,9 @@ public class AddFriends extends FragmentActivity {
             add("public_profile");
         }
     };
+
+    private static final String TAG = "Debugging";
+
     private static final int PICK_FRIENDS_ACTIVITY = 1;
     private Button pickFriendsButton, addFriendsNextButton;
     private TextView resultsTextView;
@@ -198,7 +202,9 @@ public class AddFriends extends FragmentActivity {
 
             for (GraphUser user : selection) {
                 friendsNames.add(user.getName());
-                friendsIds.add(user.getId());
+                if (!friendsIds.contains(user.getId())) {
+                    friendsIds.add(user.getId());
+                }
             }
             results = TextUtils.join(", ", friendsNames);
         } else {

@@ -35,10 +35,10 @@ public class NewEvent extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 title = titleText.getText().toString();
+                details = detailsText.getText().toString();
                 //Check if user entered text into event title field
                 if (title.matches("")) {
                     Toast.makeText(getBaseContext(), "Must enter event title", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Title not entered");
                 }
                 else {
                     Log.d(TAG, title);

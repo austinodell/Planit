@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
+import com.parse.Parse;
+
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = "MainFragment";
@@ -24,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        Log.d(TAG, "onCreate");
+        Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
         mContext = this;
 

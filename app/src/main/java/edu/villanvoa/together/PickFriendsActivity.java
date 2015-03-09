@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,6 +19,8 @@ import java.util.List;
 
 
 public class PickFriendsActivity extends FragmentActivity {
+    private static final String TAG = "Debugging";
+
     FriendPickerFragment friendPickerFragment;
 
     // A helper to simplify life for callers who want to populate a Bundle with the necessary
