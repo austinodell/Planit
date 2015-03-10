@@ -15,10 +15,13 @@
     <string name="need_perms_alert_button_ok">OK</string>
     <string name="need_perms_alert_button_quit">Quit</string>
     <string name="title_activity_user_events">UserEventsActivity</string>
-    <string name="title_activity_home">Home</string>
-    <string name="title_activity_new_event">NewEvent</string>
-    <string name="title_activity_add_friends">AddFriends</string>
-    <string name="title_activity_pick_date">PickDateActivity</string>
+    <string name="title_activity_home">My Events</string>
+    <string name="title_activity_new_event">New Event</string>
+
+    <string name="title_activity_add_friends">Choose Friends</string>
+    <string name="action_add_friends_next">Next</string>
+
+    <string name="title_activity_pick_date">Pick The Date</string>
     <string name="title_activity_date_picker">DatePickerActivity</string>
 
 </resources>

@@ -47,7 +47,7 @@ public class Home extends ActionBarActivity {
         ActionBar mSupportActionBar = getSupportActionBar();
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setTitle("My Events");
+        toolbar.setTitle(R.string.title_activity_home);
 
         eventsList = new ArrayList<Event>();
 

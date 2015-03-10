@@ -1,18 +1,32 @@
 package edu.villanvoa.together;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.internal.view.menu.MenuBuilder;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
 import com.facebook.Session;
@@ -20,12 +34,22 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-public class AddFriends extends FragmentActivity {
+public class AddFriends extends ActionBarActivity {
+
+    /* UniversalImageLoader library variables */
+    protected ImageLoader imageLoader;
+    protected DisplayImageOptions imageOptions;
+    protected ImageLoaderConfiguration imageConfig;
 
     private static final List<String> PERMISSIONS = new ArrayList<String>() {
         {
@@ -37,8 +61,7 @@ public class AddFriends extends FragmentActivity {
     private static final String TAG = "Debugging";
 
     private static final int PICK_FRIENDS_ACTIVITY = 1;
-    private Button pickFriendsButton, addFriendsNextButton;
-    private TextView resultsTextView;
+    private Button pickFriendsButton;
     private UiLifecycleHelper lifecycleHelper;
     boolean pickFriendsWhenSessionOpened;
     ArrayList<String> friendsNames = new ArrayList<String>();
@@ -50,26 +73,21 @@ public class AddFriends extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
 
+        /* Set up toolbar to replace Actionbar */
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar mSupportActionBar = getSupportActionBar();
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.setTitle(R.string.title_activity_add_friends);
+
         callingIntent = getIntent();
         pickDateIntent = new Intent(this, PickDateActivity.class);
 
-        resultsTextView = (TextView) findViewById(R.id.resultsTextView);
         pickFriendsButton = (Button) findViewById(R.id.pickFriendsButton);
         pickFriendsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 onClickPickFriends();
-            }
-        });
-
-        addFriendsNextButton = (Button) findViewById(R.id.addFriendsNextButton);
-        addFriendsNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickDateIntent.putExtra("EventTitle", callingIntent.getStringExtra("EventTitle"));
-                pickDateIntent.putExtra("EventDetails", callingIntent.getStringExtra("EventDetails"));
-                pickDateIntent.putExtra("FriendsNames", friendsNames);
-                pickDateIntent.putExtra("FriendsIds", friendsIds);
-                startActivity(pickDateIntent);
             }
         });
 
@@ -82,6 +100,46 @@ public class AddFriends extends FragmentActivity {
         lifecycleHelper.onCreate(savedInstanceState);
 
         ensureOpenSession();
+
+        /* Set up UniversalImageLoader library variables */
+        imageConfig = new ImageLoaderConfiguration.Builder(this)
+                .build();
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(imageConfig);
+
+        imageOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_launcher)
+                .showImageForEmptyUri(R.drawable.ic_launcher)
+                .showImageOnFail(R.drawable.ic_launcher)
+                .cacheOnDisk(true)
+                .build();
+
+        /* test */
+        onClickPickFriends();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_add_friends, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_add_friends_next:
+                pickDateIntent.putExtra("EventTitle", callingIntent.getStringExtra("EventTitle"));
+                pickDateIntent.putExtra("EventDetails", callingIntent.getStringExtra("EventDetails"));
+                pickDateIntent.putExtra("FriendsNames", friendsNames);
+                pickDateIntent.putExtra("FriendsIds", friendsIds);
+                startActivity(pickDateIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -89,7 +147,11 @@ public class AddFriends extends FragmentActivity {
         super.onStart();
 
         // Update the display every time we are started.
-        displaySelectedFriends(RESULT_OK);
+        try {
+            displaySelectedFriends(RESULT_OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -113,7 +175,11 @@ public class AddFriends extends FragmentActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PICK_FRIENDS_ACTIVITY:
-                displaySelectedFriends(resultCode);
+                try {
+                    displaySelectedFriends(resultCode);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
@@ -193,31 +259,34 @@ public class AddFriends extends FragmentActivity {
         }
     }
 
-    private void displaySelectedFriends(int resultCode) {
+    private void displaySelectedFriends(int resultCode) throws IOException {
         String results = "";
         FriendPickerApplication application = (FriendPickerApplication) getApplication();
 
         Collection<GraphUser> selection = application.getSelectedUsers();
         if (selection != null && selection.size() > 0) {
+            resetFriendsList();
 
             for (GraphUser user : selection) {
-                friendsNames.add(user.getName());
+                addFriendToList(user.getId(),user.getName());
+                /*friendsNames.add(user.getName());
                 if (!friendsIds.contains(user.getId())) {
                     friendsIds.add(user.getId());
-                }
+                }*/
             }
-            results = TextUtils.join(", ", friendsNames);
+
+            //results = TextUtils.join(", ", friendsNames);
         } else {
-            results = "<No friends selected>";
+            resetFriendsList();
+            //results = "<No friends selected>";
         }
 
-        resultsTextView.setText(results);
+        //resultsTextView.setText(results);
     }
 
     private void onClickPickFriends() {
 
         startPickFriendsActivity();
-        addFriendsNextButton.setVisibility(View.VISIBLE);
     }
 
     private void startPickFriendsActivity() {
@@ -232,6 +301,31 @@ public class AddFriends extends FragmentActivity {
         } else {
             pickFriendsWhenSessionOpened = true;
         }
+    }
+
+    /* Remove all friends from ViewGroup */
+    protected void resetFriendsList() {
+        ViewGroup vg = (ViewGroup) findViewById(R.id.friends_placeholder);
+        vg.removeAllViews();
+    }
+
+    /* Add card for given recipe name, details, starred status, and custom status */
+    protected void addFriendToList(String id, String name) throws IOException {
+        Log.i(TAG,"Displaying user ("+id+") "+name);
+        final LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.fragment_user,null);
+
+        SquareImage user_picture = (SquareImage) layout.findViewById(R.id.user_iv);
+        String img_url = "http://graph.facebook.com/"+id+"/picture?type=large";
+        imageLoader.displayImage(img_url,user_picture,imageOptions); // Display Image
+        //Bitmap mIcon1 = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
+        //user_picture.setImageBitmap(mIcon1);
+
+        TextView user_name = (TextView) layout.findViewById(R.id.user_tv);
+        user_name.setText(name);
+
+        /* Add Layout */
+        ViewGroup vg = (ViewGroup) findViewById(R.id.friends_placeholder);
+        vg.addView(layout);
     }
 
 }
