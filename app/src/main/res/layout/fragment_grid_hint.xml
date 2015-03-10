@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center_vertical"
+    android:layout_columnSpan="2">
+
+    <TextView
+        android:id="@+id/hint_add_user"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="20sp"
+        android:textSize="18sp"
+
+        android:background="@color/page_background" />
+
+</FrameLayout>

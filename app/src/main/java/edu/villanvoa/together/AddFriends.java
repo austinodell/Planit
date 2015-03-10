@@ -15,13 +15,16 @@ import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,8 +37,6 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,9 +48,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class AddFriends extends ActionBarActivity {
 
     /* UniversalImageLoader library variables */
-    protected ImageLoader imageLoader;
-    protected DisplayImageOptions imageOptions;
-    protected ImageLoaderConfiguration imageConfig;
+    static public ImageLoader imageLoader;
+    static public DisplayImageOptions imageOptions;
+    static public ImageLoaderConfiguration imageConfig;
 
     private static final List<String> PERMISSIONS = new ArrayList<String>() {
         {
@@ -60,8 +61,23 @@ public class AddFriends extends ActionBarActivity {
 
     private static final String TAG = "Debugging";
 
+    private EditText event_name;
+    private EditText event_details;
+    private TextView addUserHint;
+
+    private String hint = "Click button to add friends.";
+
+    private Friend hintFriend;
+
+    private GridView gridView;
+    private View btnView;
+    private FriendsGridAdapter friendsGridAdapter;
+
+    private SquareImageButton addUserBtn;
+
+    private ArrayList<Friend> friendsList;
+
     private static final int PICK_FRIENDS_ACTIVITY = 1;
-    private Button pickFriendsButton;
     private UiLifecycleHelper lifecycleHelper;
     boolean pickFriendsWhenSessionOpened;
     ArrayList<String> friendsNames = new ArrayList<String>();
@@ -83,13 +99,6 @@ public class AddFriends extends ActionBarActivity {
 
         callingIntent = getIntent();
         pickDateIntent = new Intent(this, PickDateActivity.class);
-
-        pickFriendsButton = (Button) findViewById(R.id.pickFriendsButton);
-        pickFriendsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                onClickPickFriends();
-            }
-        });
 
         lifecycleHelper = new UiLifecycleHelper(this, new Session.StatusCallback() {
             @Override
@@ -114,8 +123,31 @@ public class AddFriends extends ActionBarActivity {
                 .cacheOnDisk(true)
                 .build();
 
-        /* test */
-        onClickPickFriends();
+        event_name = (EditText) findViewById(R.id.event_name_et);
+        event_details = (EditText) findViewById(R.id.event_details_et);
+        addUserHint = (TextView) findViewById(R.id.add_user_hint_tv);
+
+        addUserHint.setText(hint);
+
+        friendsList = new ArrayList<Friend>();
+        friendsList.add(hintFriend);
+
+        gridView = (GridView) findViewById(R.id.container);
+
+        ViewGroup vg = (ViewGroup) findViewById(R.id.container);
+
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        btnView = mInflater.inflate(R.layout.fragment_grid_user_first,vg,false);
+        addUserBtn = (SquareImageButton) btnView.findViewById(R.id.add_user_btn);
+
+        addUserBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                onClickPickFriends();
+            }
+        });
+
+        friendsGridAdapter = new FriendsGridAdapter(this,friendsList,btnView,gridView);
+        gridView.setAdapter(friendsGridAdapter);
     }
 
     @Override
@@ -131,8 +163,10 @@ public class AddFriends extends ActionBarActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_add_friends_next:
-                pickDateIntent.putExtra("EventTitle", callingIntent.getStringExtra("EventTitle"));
-                pickDateIntent.putExtra("EventDetails", callingIntent.getStringExtra("EventDetails"));
+                //pickDateIntent.putExtra("EventTitle", callingIntent.getStringExtra("EventTitle"));
+                //pickDateIntent.putExtra("EventDetails", callingIntent.getStringExtra("EventDetails"));
+                pickDateIntent.putExtra("EventTitle",event_name.getText());
+                pickDateIntent.putExtra("EventDetails",event_details.getText());
                 pickDateIntent.putExtra("FriendsNames", friendsNames);
                 pickDateIntent.putExtra("FriendsIds", friendsIds);
                 startActivity(pickDateIntent);
@@ -147,11 +181,7 @@ public class AddFriends extends ActionBarActivity {
         super.onStart();
 
         // Update the display every time we are started.
-        try {
-            displaySelectedFriends(RESULT_OK);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        displaySelectedFriends(RESULT_OK);
     }
 
     @Override
@@ -175,11 +205,7 @@ public class AddFriends extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PICK_FRIENDS_ACTIVITY:
-                try {
-                    displaySelectedFriends(resultCode);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                displaySelectedFriends(resultCode);
                 break;
             default:
                 Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
@@ -259,32 +285,34 @@ public class AddFriends extends ActionBarActivity {
         }
     }
 
-    private void displaySelectedFriends(int resultCode) throws IOException {
-        String results = "";
+    private void displaySelectedFriends(int resultCode) {
+        //String results = "";
+        friendsList.clear();
         FriendPickerApplication application = (FriendPickerApplication) getApplication();
 
         Collection<GraphUser> selection = application.getSelectedUsers();
         if (selection != null && selection.size() > 0) {
-            resetFriendsList();
-
             for (GraphUser user : selection) {
-                addFriendToList(user.getId(),user.getName());
-                /*friendsNames.add(user.getName());
+                addFriendToGrid(user.getId(),user.getName(),true);
+                friendsNames.add(user.getName());
                 if (!friendsIds.contains(user.getId())) {
                     friendsIds.add(user.getId());
-                }*/
+                }
             }
 
+            addUserHint.setText("Friends");
             //results = TextUtils.join(", ", friendsNames);
         } else {
-            resetFriendsList();
+            addUserHint.setText(hint);
+            //friendsList.add(hintFriend);
             //results = "<No friends selected>";
         }
 
+        gridView.setAdapter(friendsGridAdapter);
         //resultsTextView.setText(results);
     }
 
-    private void onClickPickFriends() {
+    public void onClickPickFriends() {
 
         startPickFriendsActivity();
     }
@@ -303,29 +331,27 @@ public class AddFriends extends ActionBarActivity {
         }
     }
 
-    /* Remove all friends from ViewGroup */
-    protected void resetFriendsList() {
-        ViewGroup vg = (ViewGroup) findViewById(R.id.friends_placeholder);
-        vg.removeAllViews();
+    private void addFriendToGrid(String id, String name, boolean isReal) {
+        Friend friend = new Friend(id, name);
+        friendsList.add(friend);
     }
 
-    /* Add card for given recipe name, details, starred status, and custom status */
-    protected void addFriendToList(String id, String name) throws IOException {
-        Log.i(TAG,"Displaying user ("+id+") "+name);
-        final LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.fragment_user,null);
+    public static class Friend {
+        public final String id;
+        public final String name;
+        public final boolean isReal;
 
-        SquareImage user_picture = (SquareImage) layout.findViewById(R.id.user_iv);
-        String img_url = "http://graph.facebook.com/"+id+"/picture?type=large";
-        imageLoader.displayImage(img_url,user_picture,imageOptions); // Display Image
-        //Bitmap mIcon1 = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-        //user_picture.setImageBitmap(mIcon1);
+        Friend(String id, String name) {
+            this.id = id;
+            this.name = name;
+            isReal = true;
+        }
 
-        TextView user_name = (TextView) layout.findViewById(R.id.user_tv);
-        user_name.setText(name);
-
-        /* Add Layout */
-        ViewGroup vg = (ViewGroup) findViewById(R.id.friends_placeholder);
-        vg.addView(layout);
+        Friend(String text) {
+            id = "0";
+            name = text;
+            isReal = false;
+        }
     }
 
 }

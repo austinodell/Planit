@@ -71,7 +71,7 @@ public class Home extends ActionBarActivity {
         new_event_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext,NewEvent.class));
+                mContext.startActivity(new Intent(mContext,AddFriends.class));
             }
         });
     }
