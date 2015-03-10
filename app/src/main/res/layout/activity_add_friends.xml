@@ -25,12 +25,14 @@
 
             <TextView
                 android:text="Name:"
+                android:textSize="18sp"
                 android:paddingRight="10sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <EditText
                 android:id="@+id/event_name_et"
+                android:textSize="16sp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
@@ -42,6 +44,7 @@
 
             <TextView
                 android:text="Details:"
+                android:textSize="18sp"
                 android:paddingRight="10sp"
                 android:visibility="visible"
                 android:layout_width="wrap_content"
@@ -49,6 +52,7 @@
 
             <EditText
                 android:id="@+id/event_details_et"
+                android:textSize="16sp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
