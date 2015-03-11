@@ -148,13 +148,21 @@ public class AddFriends extends ActionBarActivity {
 
         friendsGridAdapter = new FriendsGridAdapter(this,friendsList,btnView,gridView);
         gridView.setAdapter(friendsGridAdapter);
+
+        final ImageButton nextBtn = (ImageButton) findViewById(R.id.next_page_btn);
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextStep();
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_add_friends, menu);
+        //MenuInflater inflater = getMenuInflater();
+        //inflater.inflate(R.menu.menu_add_friends, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -174,6 +182,14 @@ public class AddFriends extends ActionBarActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void nextStep() {
+        pickDateIntent.putExtra("EventTitle",event_name.getText());
+        pickDateIntent.putExtra("EventDetails",event_details.getText());
+        pickDateIntent.putExtra("FriendsNames", friendsNames);
+        pickDateIntent.putExtra("FriendsIds", friendsIds);
+        startActivity(pickDateIntent);
     }
 
     @Override
