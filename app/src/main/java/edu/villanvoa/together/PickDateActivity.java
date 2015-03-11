@@ -3,14 +3,17 @@ package edu.villanvoa.together;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -23,8 +26,11 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class PickDateActivity extends ActionBarActivity {
@@ -36,7 +42,10 @@ public class PickDateActivity extends ActionBarActivity {
     DatePickerDialog datePickerDialog;
     TimePickerDialog timePickerDialog1, timePickerDialog2;
 
-    Button dateButton, timeButton1, timeButton2, nextButton;
+    Button dateButton;
+    Button timeButton1;
+    Button timeButton2;
+    ImageButton nextButton;
     TextView dateTextView, timeTextView1, timeTextView2;
 
     String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId;
@@ -50,10 +59,22 @@ public class PickDateActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_date);
 
+        /* Set up toolbar to replace Actionbar */
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar mSupportActionBar = getSupportActionBar();
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.setTitle(R.string.title_activity_pick_date);
+
         callingIntent = getIntent();
 
-        eventDate = null;
-        startTime = null;
+        final DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        final DateFormat timeFormat = new SimpleDateFormat("hh:mm aa");
+        Date date = new Date();
+
+        eventDate = dateFormat.format(date);
+        startTime = timeFormat.format(date);
         endTime = null;
         eventTitle = callingIntent.getStringExtra("EventTitle");
         eventDetails = callingIntent.getStringExtra("EventDetails");
@@ -78,17 +99,18 @@ public class PickDateActivity extends ActionBarActivity {
             Request.executeBatchAsync(request);
         }
 
-        dateTextView = (TextView) findViewById(R.id.dateTextView);
-        timeTextView1 = (TextView) findViewById(R.id.timeTextView1);
-        timeTextView2 = (TextView) findViewById(R.id.timeTextView2);
-
         datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                dateButton.setVisibility(View.INVISIBLE);
-                eventDate = ((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
-                dateTextView.setText(eventDate);
-                dateTextView.setVisibility(View.VISIBLE);
+                String oldDate = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+                Date date1 = null;
+                try {
+                    date1 = new SimpleDateFormat("yyyy-MM-dd").parse(oldDate);
+                } catch (java.text.ParseException e) {
+                    e.printStackTrace();
+                }
+                eventDate = dateFormat.format(date1);
+                dateButton.setText(eventDate);
             }
         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
@@ -96,10 +118,15 @@ public class PickDateActivity extends ActionBarActivity {
 
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                timeButton1.setVisibility(View.INVISIBLE);
-                startTime = (hourOfDay + ":" + minute);
-                timeTextView1.setText(startTime);
-                timeTextView1.setVisibility(View.VISIBLE);
+                String oldTime = hourOfDay+":"+minute;
+                Date date1 = null;
+                try {
+                    date1 = new SimpleDateFormat("HH:mm").parse(oldTime);
+                } catch (java.text.ParseException e) {
+                    e.printStackTrace();
+                }
+                startTime = timeFormat.format(date1);
+                timeButton1.setText(startTime);
             }
         }, Calendar.getInstance().get(Calendar.HOUR), Calendar.getInstance().get(Calendar.MINUTE), false);
 
@@ -107,14 +134,20 @@ public class PickDateActivity extends ActionBarActivity {
 
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                timeButton2.setVisibility(View.INVISIBLE);
-                endTime = (hourOfDay + ":" + minute);
-                timeTextView2.setText(endTime);
-                timeTextView2.setVisibility(View.VISIBLE);
+                String oldTime = hourOfDay+":"+minute;
+                Date date1 = null;
+                try {
+                    date1 = new SimpleDateFormat("HH:mm").parse(oldTime);
+                } catch (java.text.ParseException e) {
+                    e.printStackTrace();
+                }
+                endTime = timeFormat.format(date1);
+                timeButton2.setText(endTime);
             }
         }, Calendar.getInstance().get(Calendar.HOUR), Calendar.getInstance().get(Calendar.MINUTE), false);
 
         dateButton = (Button) findViewById(R.id.dateButton);
+        dateButton.setText(eventDate);
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +156,7 @@ public class PickDateActivity extends ActionBarActivity {
         });
 
         timeButton1 = (Button) findViewById(R.id.timeButton1);
+        timeButton1.setText(startTime);
         timeButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,7 +173,7 @@ public class PickDateActivity extends ActionBarActivity {
         });
 
 
-        nextButton = (Button) findViewById(R.id.pickDateNextButton);
+        nextButton = (ImageButton) findViewById(R.id.pickDateNextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
