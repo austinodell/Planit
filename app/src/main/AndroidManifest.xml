@@ -61,6 +61,11 @@
             android:name=".CheckNotificationService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".NewIdea"
+            android:label="@string/title_activity_new_idea" >
+        </activity>
     </application>
 
 </manifest>

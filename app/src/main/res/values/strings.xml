@@ -23,5 +23,6 @@
 
     <string name="title_activity_pick_date">Pick The Date</string>
     <string name="title_activity_date_picker">DatePickerActivity</string>
+    <string name="title_activity_new_idea">NewIdea</string>
 
 </resources>
