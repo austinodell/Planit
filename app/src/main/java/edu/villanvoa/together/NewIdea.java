@@ -10,6 +10,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+
 
 public class NewIdea extends ActionBarActivity {
 
@@ -20,6 +23,8 @@ public class NewIdea extends ActionBarActivity {
 
     //Intent Variables
     Intent callingIntent, returnIdea;
+
+    ParseObject ideaObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,21 @@ public class NewIdea extends ActionBarActivity {
         returnIdea.putExtra("ideaTitle", titleET.getText());
         returnIdea.putExtra("ideaLoc", locACV.getText());
         returnIdea.putExtra("ideaDescription", descriptionET.getText());
+
+        //Save the idea to parse
+        ideaObject = new ParseObject("Idea");
+        ideaObject.put("Title", titleET.getText());
+        ideaObject.put("Location", locACV.getText());
+        ideaObject.put("Details", descriptionET.getText());
+        ideaObject.put("Upvotes", 1);
+        ideaObject.put("DownVotes", 0);
+
+        // saves it to parse.com
+        try {
+            ideaObject.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
         //Launch the intent
