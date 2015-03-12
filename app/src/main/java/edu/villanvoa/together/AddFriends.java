@@ -129,14 +129,6 @@ public class AddFriends extends ActionBarActivity {
 
         addUserHint.setText(hint);
 
-        Button testBtn = (Button) findViewById(R.id.test_btn);
-        testBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),ViewEvent.class));
-            }
-        });
-
         friendsList = new ArrayList<Friend>();
         friendsList.add(hintFriend);
 
@@ -337,6 +329,7 @@ public class AddFriends extends ActionBarActivity {
 
     private void addFriendToGrid(String id, String name, boolean isReal) {
         Friend friend = new Friend(id, name);
+        Log.i(TAG,"Friend ("+name+") ID: "+id);
         friendsList.add(friend);
     }
 

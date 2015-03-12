@@ -26,8 +26,8 @@ public class ViewEvent extends ActionBarActivity {
     private ImageView eventImg;
     private TextView eventDesc;
     private TextView eventTime;
-    private GridView eventFriendsGV;
-    private GridView eventIdeasTable;
+    private FullGridView eventFriendsGV;
+    private FullGridView eventIdeasTable;
 
     private ArrayList<Friend> friendsList;
     private FriendsGridAdapter friendsGridAdapter;
@@ -49,11 +49,13 @@ public class ViewEvent extends ActionBarActivity {
 
         /* Set up toolbar to replace Actionbar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Event Title");
         setSupportActionBar(toolbar);
         ActionBar mSupportActionBar = getSupportActionBar();
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setTitle(R.string.title_activity_view_event);
+
+
 
         /* Set up UniversalImageLoader library variables */
         imageConfig = new ImageLoaderConfiguration.Builder(this)
@@ -71,22 +73,52 @@ public class ViewEvent extends ActionBarActivity {
         Log.i(TAG,"ViewEvent ImageLoader initialized");
 
         friendsList = new ArrayList<Friend>();
+        addFriendToGrid("10206106201596623","Andrew Walters",true);
+        addFriendToGrid("10153062089109882","Andy Rinaldi",true);
+        addFriendToGrid("10204703776492383","Carlos Alejandro Gallardo",true);
         addFriendToGrid("1020156028013792","Matt Wiedmeier",true);
+        addFriendToGrid("10206307009142454","Melissa Sustaita",true);
+        addFriendToGrid("10202752169485847","Olivia Greene",true);
+        addFriendToGrid("10206202607453094","Ricky Baum",true);
+        addFriendToGrid("10153204634714903","Stephanie Molina",true);
+        addFriendToGrid("10206106201596623","Andrew Walters",true);
+        addFriendToGrid("10153062089109882","Andy Rinaldi",true);
+        addFriendToGrid("10204703776492383","Carlos Alejandro Gallardo",true);
         addFriendToGrid("1020156028013792","Matt Wiedmeier",true);
-        addFriendToGrid("1020156028013792", "Matt Wiedmeier", true);
+        addFriendToGrid("10206307009142454","Melissa Sustaita",true);
+        addFriendToGrid("10202752169485846","Olivia Greene",true);
+        addFriendToGrid("10206202607453094","Ricky Baum",true);
+        addFriendToGrid("10153204634714903","Stephanie Molina",true);
+        addFriendToGrid("10206106201596623","Andrew Walters",true);
+        addFriendToGrid("10153062089109882","Andy Rinaldi",true);
+        addFriendToGrid("10204703776492383","Carlos Alejandro Gallardo",true);
+        addFriendToGrid("1020156028013792","Matt Wiedmeier",true);
+        addFriendToGrid("10206307009142454","Melissa Sustaita",true);
 
         Log.i(TAG,"ViewEvent Friends Added");
 
         eventImg = (ImageView) findViewById(R.id.view_event_img);
         eventDesc = (TextView) findViewById(R.id.view_event_description);
         eventTime = (TextView) findViewById(R.id.view_event_time);
-        eventFriendsGV = (GridView) findViewById(R.id.view_event_friends_container);
-        eventIdeasTable = (GridView) findViewById(R.id.view_event_ideas_container);
+        eventFriendsGV = (FullGridView) findViewById(R.id.view_event_friends_container);
+        eventIdeasTable = (FullGridView) findViewById(R.id.view_event_ideas_container);
+
+        eventDesc.setText("This is a sample description for a sample event.  Fill this field with something obtained by the received intent.");
+        eventTime.setText("Time: 9:00pm - 1:00am");
 
         friendsGridAdapter = new FriendsGridAdapter(this,friendsList,eventFriendsGV);
         eventFriendsGV.setAdapter(friendsGridAdapter);
 
         ideasList = new ArrayList<Idea>();
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
         addIdeaToList("Idea Name","Idea Description");
         addIdeaToList("Idea Name","Idea Description");
         addIdeaToList("Idea Name","Idea Description");

@@ -191,6 +191,8 @@ public class PickDateActivity extends ActionBarActivity {
                     if (objectId != null) {
                         addUsersToEvent(creatorId, friendsIds, objectId);
                         inviteFriends(friendsIds, creatorFirstName, eventTitle);
+
+                        startActivity(new Intent(getApplicationContext(),ViewEvent.class));
                     } else {
                         Log.d(TAG, "objectId is null");
                     }
