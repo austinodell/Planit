@@ -158,38 +158,6 @@ public class AddFriends extends ActionBarActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        //MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.menu_add_friends, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.action_add_friends_next:
-                //pickDateIntent.putExtra("EventTitle", callingIntent.getStringExtra("EventTitle"));
-                //pickDateIntent.putExtra("EventDetails", callingIntent.getStringExtra("EventDetails"));
-                pickDateIntent.putExtra("EventTitle",event_name.getText());
-                pickDateIntent.putExtra("EventDetails",event_details.getText());
-                pickDateIntent.putExtra("FriendsNames", friendsNames);
-                pickDateIntent.putExtra("FriendsIds", friendsIds);
-
-                Log.i(TAG,"EventTitle: " + event_name.getText());
-                Log.i(TAG,"EventDetails: " + event_details.getText());
-                Log.i(TAG,"FriendsNames: " + friendsNames);
-                Log.i(TAG,"FriendsIds: " + friendsIds);
-
-                startActivity(pickDateIntent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void nextStep() {
         pickDateIntent.putExtra("EventTitle",event_name.getText());
         pickDateIntent.putExtra("EventDetails",event_details.getText());
@@ -362,24 +330,6 @@ public class AddFriends extends ActionBarActivity {
     private void addFriendToGrid(String id, String name, boolean isReal) {
         Friend friend = new Friend(id, name);
         friendsList.add(friend);
-    }
-
-    public static class Friend {
-        public final String id;
-        public final String name;
-        public final boolean isReal;
-
-        Friend(String id, String name) {
-            this.id = id;
-            this.name = name;
-            isReal = true;
-        }
-
-        Friend(String text) {
-            id = "0";
-            name = text;
-            isReal = false;
-        }
     }
 
 }

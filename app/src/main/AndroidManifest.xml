@@ -66,6 +66,10 @@
             android:name=".NewIdea"
             android:label="@string/title_activity_new_idea" >
         </activity>
+        <activity
+            android:name=".ViewEvent"
+            android:label="@string/title_activity_view_event" >
+        </activity>
     </application>
 
 </manifest>

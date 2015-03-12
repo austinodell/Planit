@@ -19,12 +19,12 @@ import java.util.List;
  * Created by aodell on 3/10/15.
  */
 public class FriendsGridAdapter extends BaseAdapter {
-    private List<AddFriends.Friend> mFriend;
+    private List<Friend> mFriend;
     private final LayoutInflater mInflater;
     private View btnView;
     private GridView gridView;
 
-    public FriendsGridAdapter(Context context, ArrayList<AddFriends.Friend> list, View btnView, GridView gridView) {
+    public FriendsGridAdapter(Context context, ArrayList<Friend> list, View btnView, GridView gridView) {
         mInflater = LayoutInflater.from(context);
         mFriend = list;
         this.btnView = btnView;
@@ -37,7 +37,7 @@ public class FriendsGridAdapter extends BaseAdapter {
     }
 
     @Override
-    public AddFriends.Friend getItem(int i) {
+    public Friend getItem(int i) {
         return mFriend.get(i);
     }
 
@@ -63,7 +63,7 @@ public class FriendsGridAdapter extends BaseAdapter {
         } else {
             i--;
 
-            AddFriends.Friend friend = getItem(i);
+            Friend friend = getItem(i);
 
             if(friend.isReal) {
 
