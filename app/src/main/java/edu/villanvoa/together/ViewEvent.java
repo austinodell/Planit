@@ -27,10 +27,13 @@ public class ViewEvent extends ActionBarActivity {
     private TextView eventDesc;
     private TextView eventTime;
     private GridView eventFriendsGV;
-    private TableLayout eventIdeasTable;
+    private GridView eventIdeasTable;
 
     private ArrayList<Friend> friendsList;
     private FriendsGridAdapter friendsGridAdapter;
+
+    private ArrayList<Idea> ideasList;
+    private IdeaListAdapter ideaListAdapter;
 
     /* UniversalImageLoader library variables */
     static public ImageLoader imageLoader;
@@ -78,23 +81,32 @@ public class ViewEvent extends ActionBarActivity {
         eventDesc = (TextView) findViewById(R.id.view_event_description);
         eventTime = (TextView) findViewById(R.id.view_event_time);
         eventFriendsGV = (GridView) findViewById(R.id.view_event_friends_container);
-        eventIdeasTable = (TableLayout) findViewById(R.id.view_event_ideas_container);
-
-        Log.i(TAG,"ViewEvent vars initialized");
+        eventIdeasTable = (GridView) findViewById(R.id.view_event_ideas_container);
 
         friendsGridAdapter = new FriendsGridAdapter(this,friendsList,eventFriendsGV);
-
-        Log.i(TAG,"ViewEvent Adapter initialized");
-
         eventFriendsGV.setAdapter(friendsGridAdapter);
 
-        Log.i(TAG,"ViewEvent Adapter set");
+        ideasList = new ArrayList<Idea>();
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+        addIdeaToList("Idea Name","Idea Description");
+
+        ideaListAdapter = new IdeaListAdapter(this,ideasList);
+        eventIdeasTable.setAdapter(ideaListAdapter);
     }
 
     private void addFriendToGrid(String id, String name, boolean isReal) {
         Friend friend = new Friend(id, name);
         friendsList.add(friend);
 
-        Log.i(TAG,"ViewEvent Friend Added");
+        Log.i(TAG,"ViewEvent Friend ("+friend.id+") Added");
+    }
+
+    private void addIdeaToList(String name, String description) {
+        Idea idea = new Idea(name);
+        idea.setDesc(description);
+        ideasList.add(idea);
+
+        Log.i(TAG,"ViewEvent Idea ("+idea.getId()+") Added");
     }
 }

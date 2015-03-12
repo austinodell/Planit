@@ -11,52 +11,49 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by aodell on 3/12/15.
- */
 public class IdeaListAdapter extends BaseAdapter {
-    private List<Idea> mIdea;
+    private List<Idea> mIdeaList;
     private final LayoutInflater mInflater;
 
     public IdeaListAdapter(Context context, ArrayList<Idea> list) {
         mInflater = LayoutInflater.from(context);
-        mIdea = list;
+        mIdeaList = list;
     }
 
     @Override
     public int getCount() {
-        return mIdea.size();
+        return mIdeaList.size();
     }
 
     @Override
     public Idea getItem(int i) {
-        return mIdea.get(i);
+        return mIdeaList.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return mIdea.get(i).getId();
+        return mIdeaList.get(i).getId();
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = view;
-        ImageView picture;
-        TextView name;
+        TextView name, rank;
 
         if (v == null) {
-            v = mInflater.inflate(R.layout.fragment_event, viewGroup, false);
-            v.setTag(R.id.event_img, v.findViewById(R.id.event_img));
-            v.setTag(R.id.event_tv, v.findViewById(R.id.event_tv));
+            v = mInflater.inflate(R.layout.fragment_idea_list_item, viewGroup, false);
+            v.setTag(R.id.idea_list_item_name, v.findViewById(R.id.idea_list_item_name));
+            v.setTag(R.id.idea_list_item_rank, v.findViewById(R.id.idea_list_item_rank));
         }
 
-        picture = (ImageView) v.getTag(R.id.event_img);
-        name = (TextView) v.getTag(R.id.event_tv);
+        name = (TextView) v.getTag(R.id.idea_list_item_name);
+        rank = (TextView) v.getTag(R.id.idea_list_item_rank);
 
-        Home.Event event = getItem(i);
+        Idea idea = getItem(i);
 
-        picture.setImageResource(event.drawableId);
-        name.setText(event.name);
+        name.setText(idea.getName());
+        rank.setText("+" + idea.getId());
 
         return v;
     }
+}
