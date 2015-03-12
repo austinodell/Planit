@@ -7,9 +7,11 @@ public class Idea {
     private String name;
     private String loc;
     private String desc;
+    private int id;
 
     public Idea(String name) {
         this.name = name;
+        this.id = 1;
     }
 
     public void setLoc(String loc) {
@@ -30,5 +32,9 @@ public class Idea {
 
     public String getDesc() {
         return this.desc;
+    }
+
+    public int getId() {
+        return this.id;
     }
 }
