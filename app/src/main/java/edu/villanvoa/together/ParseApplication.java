@@ -1,6 +1,7 @@
 package edu.villanvoa.together;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -19,5 +20,14 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         //initializes database
-        Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");    }
+        init();
+    }
+
+    public void init() {
+        Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
+    }
+
+    public static void init(Context mContext) {
+        Parse.initialize(mContext, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
+    }
 }

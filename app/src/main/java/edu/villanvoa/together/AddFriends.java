@@ -177,6 +177,12 @@ public class AddFriends extends ActionBarActivity {
                 pickDateIntent.putExtra("EventDetails",event_details.getText());
                 pickDateIntent.putExtra("FriendsNames", friendsNames);
                 pickDateIntent.putExtra("FriendsIds", friendsIds);
+
+                Log.i(TAG,"EventTitle: " + event_name.getText());
+                Log.i(TAG,"EventDetails: " + event_details.getText());
+                Log.i(TAG,"FriendsNames: " + friendsNames);
+                Log.i(TAG,"FriendsIds: " + friendsIds);
+
                 startActivity(pickDateIntent);
                 return true;
             default:
@@ -189,6 +195,12 @@ public class AddFriends extends ActionBarActivity {
         pickDateIntent.putExtra("EventDetails",event_details.getText());
         pickDateIntent.putExtra("FriendsNames", friendsNames);
         pickDateIntent.putExtra("FriendsIds", friendsIds);
+
+        Log.i(TAG,"EventTitle: " + event_name.getText());
+        Log.i(TAG,"EventDetails: " + event_details.getText());
+        Log.i(TAG,"FriendsNames: " + friendsNames);
+        Log.i(TAG,"FriendsIds: " + friendsIds);
+
         startActivity(pickDateIntent);
     }
 

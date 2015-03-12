@@ -22,6 +22,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -51,6 +52,7 @@ public class PickDateActivity extends ActionBarActivity {
     String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId;
     GraphUser user;
     ArrayList<String> friendsIds = new ArrayList<>();
+    ArrayList<String> friendsNames = new ArrayList<>();
 
     Intent callingIntent;
 
@@ -76,9 +78,16 @@ public class PickDateActivity extends ActionBarActivity {
         eventDate = dateFormat.format(date);
         startTime = timeFormat.format(date);
         endTime = null;
-        eventTitle = callingIntent.getStringExtra("EventTitle");
-        eventDetails = callingIntent.getStringExtra("EventDetails");
+        eventTitle = String.valueOf(callingIntent.getCharSequenceExtra("EventTitle"));
+        eventDetails = String.valueOf(callingIntent.getCharSequenceExtra("EventDetails"));
+        friendsNames = callingIntent.getStringArrayListExtra("FriendsNames");
         friendsIds = callingIntent.getStringArrayListExtra("FriendsIds");
+
+        Log.i(TAG,"EventTitle (rec): " + eventTitle);
+        Log.i(TAG,"EventDetails (rec): " + eventDetails);
+        Log.i(TAG,"FriendsNames (rec): " + friendsNames);
+        Log.i(TAG,"FriendsIds (rec): " + friendsIds);
+
         // Get facebook id for user currently logged in
         // Request user data and show the results
         final Session session = Session.getActiveSession();
@@ -193,6 +202,8 @@ public class PickDateActivity extends ActionBarActivity {
     //Create event on parse
     private String createEvent(final String eventTitle, final String eventDetails,
                                final String eventDate, final String startTime, final String endTime, final String creatorId) {
+
+        ParseApplication.init(this);
 
         newParseObject = new ParseObject("Event");
         newParseObject.put("Title", eventTitle);
