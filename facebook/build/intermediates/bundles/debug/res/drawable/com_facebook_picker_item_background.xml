@@ -24,4 +24,4 @@
     <item android:state_focused="true"                                                             android:drawable="@drawable/com_facebook_picker_list_focused" />
     <item                                                                                          android:drawable="@android:color/transparent" />
 </selector>
-<!-- From: file:/Users/aodell/Google%20Drive/GitHub/Planit/facebook/res/drawable/com_facebook_picker_item_background.xml -->
+<!-- From: file:/C:/Users/wildcat/Documents/_SeniorYear/MobileDevelopment/AndroidDevelopment/together/facebook/res/drawable/com_facebook_picker_item_background.xml -->

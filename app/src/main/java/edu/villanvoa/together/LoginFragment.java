@@ -1,8 +1,11 @@
 package edu.villanvoa.together;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +37,7 @@ public class LoginFragment extends Fragment {
     public GraphUser user;
     List<ParseObject> userList; //Holds all users
     ParseObject newEventObject; //Object to hold new event
+    Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class LoginFragment extends Fragment {
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
 
+       context = getActivity();
 
     }
 
@@ -63,6 +68,12 @@ public class LoginFragment extends Fragment {
                         Log.d(TAG, user.asMap().get("email").toString());
                     }
                     addUserToParse(user.getId());
+                    //Add user Facebook id to shared preferences for CheckNotificationService
+                    SharedPreferences sharedPreferences;
+                    sharedPreferences = context.getSharedPreferences("UserDetails", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("UserFbId", user.getId());
+                    editor.apply();
                 }
             }
         });
