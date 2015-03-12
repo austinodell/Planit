@@ -3,6 +3,7 @@ package edu.villanvoa.together;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -21,6 +22,7 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +46,7 @@ public class PickDateActivity extends ActionBarActivity {
     ImageButton nextButton;
     TextView dateTextView, timeTextView1, timeTextView2;
 
-    String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId;
+    String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId, creatorFirstName;
     GraphUser user;
     ArrayList<String> friendsIds = new ArrayList<>();
     ArrayList<String> friendsNames = new ArrayList<>();
@@ -77,11 +79,14 @@ public class PickDateActivity extends ActionBarActivity {
         eventDetails = String.valueOf(callingIntent.getCharSequenceExtra("EventDetails"));
         friendsNames = callingIntent.getStringArrayListExtra("FriendsNames");
         friendsIds = callingIntent.getStringArrayListExtra("FriendsIds");
+        SharedPreferences sharedPreferences;
+        sharedPreferences = this.getSharedPreferences("UserDetails", MainActivity.MODE_PRIVATE);
+        creatorFirstName = sharedPreferences.getString("UserFirstName", null);
 
-        Log.i(TAG,"EventTitle (rec): " + eventTitle);
-        Log.i(TAG,"EventDetails (rec): " + eventDetails);
-        Log.i(TAG,"FriendsNames (rec): " + friendsNames);
-        Log.i(TAG,"FriendsIds (rec): " + friendsIds);
+        Log.i(TAG, "EventTitle (rec): " + eventTitle);
+        Log.i(TAG, "EventDetails (rec): " + eventDetails);
+        Log.i(TAG, "FriendsNames (rec): " + friendsNames);
+        Log.i(TAG, "FriendsIds (rec): " + friendsIds);
 
         // Get facebook id for user currently logged in
         // Request user data and show the results
@@ -106,7 +111,7 @@ public class PickDateActivity extends ActionBarActivity {
         datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String oldDate = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+                String oldDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                 Date date1 = null;
                 try {
                     date1 = new SimpleDateFormat("yyyy-MM-dd").parse(oldDate);
@@ -122,7 +127,7 @@ public class PickDateActivity extends ActionBarActivity {
 
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                String oldTime = hourOfDay+":"+minute;
+                String oldTime = hourOfDay + ":" + minute;
                 Date date1 = null;
                 try {
                     date1 = new SimpleDateFormat("HH:mm").parse(oldTime);
@@ -138,7 +143,7 @@ public class PickDateActivity extends ActionBarActivity {
 
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                String oldTime = hourOfDay+":"+minute;
+                String oldTime = hourOfDay + ":" + minute;
                 Date date1 = null;
                 try {
                     date1 = new SimpleDateFormat("HH:mm").parse(oldTime);
@@ -185,6 +190,7 @@ public class PickDateActivity extends ActionBarActivity {
                     objectId = createEvent(eventTitle, eventDetails, eventDate, startTime, endTime, creatorId);
                     if (objectId != null) {
                         addUsersToEvent(creatorId, friendsIds, objectId);
+                        inviteFriends(friendsIds, creatorFirstName, eventTitle);
                     } else {
                         Log.d(TAG, "objectId is null");
                     }
@@ -231,6 +237,25 @@ public class PickDateActivity extends ActionBarActivity {
             newParseObject.put("UserFbId", fbId);
             newParseObject.put("EventId", eventId);
             newParseObject.saveInBackground();
+        }
+    }
+
+    //Update friends' parse to notify them
+    private void inviteFriends(ArrayList<String> friendsIds, String creatorName, String eventTitle) {
+        ParseObject userObject;
+        for (String fbId : friendsIds) {
+            ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("User");
+            queryAll.whereEqualTo("FacebookID", fbId);
+            try {
+                userObject = queryAll.getFirst();
+                userObject.put("Notification", true);
+                userObject.put("InviteFrom", creatorName);
+                userObject.put("InviteToTitle", eventTitle);
+                userObject.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.d(TAG, e.toString());
+            }
         }
     }
 }
