@@ -61,37 +61,26 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void setAlarm() {
-        Log.d(TAG, "setAlarm");
+        //Log.d(TAG, "setAlarm");
         //Set alarm to run MinuteReceiver every minute
         //Check to see if alarm is already running
         Context context = this;
 
-//        if (alarmUp) {
-//            Log.d(TAG, "Alarm already set.");
-//        }
-//        else {
-        Intent myIntent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,  0, myIntent, 0);
+        boolean alarmUp = (PendingIntent.getBroadcast(context, 0,
+                new Intent(context, AlarmReceiver.class),
+                PendingIntent.FLAG_NO_CREATE) != null);
+        if (alarmUp) {
+            Log.d(TAG, "Alarm already set.");
+        } else {
+            Intent myIntent = new Intent(context, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
 
-        //Intent myIntent = new Intent(context, CheckNotificationService.class);
-        //PendingIntent pendingIntent = PendingIntent.getService(context, 0, myIntent, 0);
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, myIntent, 0);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        //alarmManager.cancel(pendingIntent);
-
-//        boolean alarmUp = (PendingIntent.getBroadcast(context, 0,
-//                new Intent(context, AlarmReceiver.class),
-//                PendingIntent.FLAG_NO_CREATE) != null);
-
-//        if (alarmUp) {
-//            Log.d(TAG, "Alarm already set.");
-//        }
-        Calendar calendar = Calendar.getInstance();
-        long frequency = 60 * 1000; // in ms
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
-       // alarmManager.set(AlarmManager.RTC_WAKEUP, frequency, pendingIntent);
-        // }
+            Calendar calendar = Calendar.getInstance();
+            long frequency = 60 * 1000; // in ms
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
+        }
 
 
     }

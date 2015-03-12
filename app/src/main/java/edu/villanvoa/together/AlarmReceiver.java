@@ -18,9 +18,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     //Alarm Broadcast Receiver to go off every 1 minute and call the CheckNotificationService
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "Alarm onReceive");
+       //Log.d(TAG, "Alarm onReceive");
         final Intent checkNotificationIntent = new Intent(context, CheckNotificationService.class);
         context.startService(checkNotificationIntent);
-        Log.d(TAG, "Here");
     }
 }

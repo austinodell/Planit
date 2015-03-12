@@ -45,7 +45,7 @@ public class CheckNotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(TAG, "onHandleIntent");
+        //Log.d(TAG, "onHandleIntent");
 
         userObject = getUserObject();
         creatorName = userObject.getString("InviteFrom");
@@ -53,7 +53,7 @@ public class CheckNotificationService extends IntentService {
         if (userObject != null) {
             notification = checkNotification(userObject);
             if (notification) {
-                Log.d(TAG, "Notification available");
+                //Log.d(TAG, "Notification available");
                 notifyUser();
                 //Change notification boolean to false
                 userObject.put("Notification", false);
@@ -64,7 +64,7 @@ public class CheckNotificationService extends IntentService {
                     e.printStackTrace();
                 }
             } else {
-                Log.d(TAG, "Notification not available");
+                //Log.d(TAG, "Notification not available");
             }
         }
         else {
@@ -73,14 +73,14 @@ public class CheckNotificationService extends IntentService {
     }
 
     private ParseObject getUserObject() {
-        Log.d(TAG, "getUserObject()");
+        //Log.d(TAG, "getUserObject()");
 
         //Get userId from shared preferences
         SharedPreferences sharedPreferences;
         sharedPreferences = this.getSharedPreferences("UserDetails", MainActivity.MODE_PRIVATE);
         userId = sharedPreferences.getString("UserFbId", null);
         if (userId != null) {
-            Log.d(TAG, "userId: " + userId);
+            //Log.d(TAG, "userId: " + userId);
             ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("User");
             queryAll.whereEqualTo("FacebookID", userId);
             try {
@@ -97,12 +97,12 @@ public class CheckNotificationService extends IntentService {
     }
 
     private boolean checkNotification(ParseObject userObject) {
-        Log.d(TAG, "checkNotification()");
+        //Log.d(TAG, "checkNotification()");
         return userObject.getBoolean("Notification");
     }
 
     private void notifyUser(){
-        Log.d(TAG, "Notifying User");
+        //Log.d(TAG, "Notifying User");
         Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification notification = new Notification.Builder(this)
