@@ -31,8 +31,19 @@ public class FriendsGridAdapter extends BaseAdapter {
         this.gridView = gridView;
     }
 
+    public FriendsGridAdapter(Context context, ArrayList<Friend> list, GridView gridView) {
+        mInflater = LayoutInflater.from(context);
+        mFriend = list;
+        this.btnView = null;
+        this.gridView = gridView;
+    }
+
     @Override
     public int getCount() {
+        if(btnView == null) {
+            return mFriend.size();
+        }
+
         return mFriend.size() + 1;
     }
 
@@ -56,12 +67,14 @@ public class FriendsGridAdapter extends BaseAdapter {
         ImageView picture;
         TextView name;
 
-        if(i == 0) {
+        if(i == 0 && btnView != null) {
 
             v = btnView;
 
         } else {
-            i--;
+            if(btnView != null) {
+                i--;
+            }
 
             Friend friend = getItem(i);
 

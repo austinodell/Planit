@@ -129,6 +129,14 @@ public class AddFriends extends ActionBarActivity {
 
         addUserHint.setText(hint);
 
+        Button testBtn = (Button) findViewById(R.id.test_btn);
+        testBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),ViewEvent.class));
+            }
+        });
+
         friendsList = new ArrayList<Friend>();
         friendsList.add(hintFriend);
 
