@@ -1,5 +1,6 @@
 package edu.villanvoa.together;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -35,6 +39,7 @@ public class
     private TextView eventTime;
     private FullGridView eventFriendsGV;
     private FullGridView eventIdeasTable;
+    private Button addIdeaButton;
 
     private ArrayList<Friend> friendsList;
     private FriendsGridAdapter friendsGridAdapter;
@@ -47,12 +52,15 @@ public class
     static public DisplayImageOptions imageOptions;
     static public ImageLoaderConfiguration imageConfig;
 
+    private Intent addIdeaIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
         Log.i(TAG,"Started ViewEvent");
+        Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
         //Get eventObjectId from calling activity
         eventObjectId = getIntent().getStringExtra("EventObjectId");
@@ -153,6 +161,16 @@ public class
 
         ideaListAdapter = new IdeaListAdapter(this,ideasList);
         eventIdeasTable.setAdapter(ideaListAdapter);
+
+        addIdeaButton = (Button) findViewById(R.id.addIdeaButton);
+        addIdeaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addIdeaIntent = new Intent(getApplicationContext(),NewIdea.class);
+                addIdeaIntent.putExtra("EventObjectId", eventObjectId);
+                startActivity(addIdeaIntent);
+            }
+        });
     }
 
     private void addFriendsFromParse(String eventObjectId){

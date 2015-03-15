@@ -25,6 +25,7 @@ public class NewIdea extends ActionBarActivity {
     Intent callingIntent, returnIdea;
 
     ParseObject ideaObject;
+    String eventObjectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class NewIdea extends ActionBarActivity {
 
         //Receive the intent that started this activity
         callingIntent = getIntent();
+        eventObjectId = callingIntent.getStringExtra("EventObjectId");
 
         //Instantiate the EditText Views
         titleET = (EditText)findViewById(R.id.new_idea_title_et);
@@ -75,20 +77,22 @@ public class NewIdea extends ActionBarActivity {
     public void submitClicked(View view) {
 
         //Create new intent to bring idea data back to event screen
-        returnIdea = new Intent(this, Home.class);
+        returnIdea = new Intent(this, ViewEvent.class);
 
         //Store Idea data inside the intent
-        returnIdea.putExtra("ideaTitle", titleET.getText());
-        returnIdea.putExtra("ideaLoc", locACV.getText());
-        returnIdea.putExtra("ideaDescription", descriptionET.getText());
+//        returnIdea.putExtra("ideaTitle", titleET.getText().toString());
+//        returnIdea.putExtra("ideaLoc", locACV.getText().toString());
+//        returnIdea.putExtra("ideaDescription", descriptionET.getText().toString());
+        returnIdea.putExtra("EventObjectId", eventObjectId);
 
         //Save the idea to parse
         ideaObject = new ParseObject("Idea");
-        ideaObject.put("Title", titleET.getText());
-        ideaObject.put("Location", locACV.getText());
-        ideaObject.put("Details", descriptionET.getText());
+        ideaObject.put("Title", titleET.getText().toString());
+        ideaObject.put("Location", locACV.getText().toString());
+        ideaObject.put("Details", descriptionET.getText().toString());
+        ideaObject.put("EventId", eventObjectId);
         ideaObject.put("Upvotes", 1);
-        ideaObject.put("DownVotes", 0);
+        ideaObject.put("Downvotes", 0);
 
         // saves it to parse.com
         try {
@@ -99,7 +103,7 @@ public class NewIdea extends ActionBarActivity {
 
 
         //Launch the intent
-        //startActivity(returnIdea);
+        startActivity(returnIdea);
 
     }
 }

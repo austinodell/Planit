@@ -155,7 +155,8 @@
                                 android:background="@drawable/fab_grey"
                                 android:textColor="@android:color/white"
                                 android:textSize="20sp"
-                                android:text="+" />
+                                android:text="+"
+                                android:id="@+id/addIdeaButton"/>
 
                         </LinearLayout>
 
