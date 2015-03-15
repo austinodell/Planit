@@ -46,7 +46,7 @@ public class PickDateActivity extends ActionBarActivity {
     ImageButton nextButton;
     TextView dateTextView, timeTextView1, timeTextView2;
 
-    String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId, creatorFirstName;
+    String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId, creatorFirstName, creatorName;
     GraphUser user;
     ArrayList<String> friendsIds = new ArrayList<>();
     ArrayList<String> friendsNames = new ArrayList<>();
@@ -101,6 +101,8 @@ public class PickDateActivity extends ActionBarActivity {
                     if (session == Session.getActiveSession()) {
                         if (user != null) {
                             creatorId = user.getId();//user id
+                            creatorName = user.getName();
+
                         }
                     }
                 }
@@ -189,10 +191,12 @@ public class PickDateActivity extends ActionBarActivity {
                 if ((eventDate != null) && (startTime != null && (endTime != null))) {
                     objectId = createEvent(eventTitle, eventDetails, eventDate, startTime, endTime, creatorId);
                     if (objectId != null) {
-                        addUsersToEvent(creatorId, friendsIds, objectId);
+                        addUsersToEvent(creatorId, creatorName, friendsIds, objectId, friendsNames);
                         inviteFriends(friendsIds, creatorFirstName, eventTitle);
 
-                        startActivity(new Intent(getApplicationContext(),ViewEvent.class));
+                        Intent viewEventIntent = new Intent(getApplicationContext(),ViewEvent.class);
+                        viewEventIntent.putExtra("EventObjectId", objectId);
+                        startActivity(viewEventIntent);
                     } else {
                         Log.d(TAG, "objectId is null");
                     }
@@ -226,18 +230,20 @@ public class PickDateActivity extends ActionBarActivity {
     }
 
     //Add each user to the UserToEvent table on parse
-    private void addUsersToEvent(String creatorId, ArrayList<String> friendsIds, String eventId) {
+    private void addUsersToEvent(String creatorId, String creatorName, ArrayList<String> friendsIds, String eventId, ArrayList<String> friendsNames) {
         //Add creator id
         newParseObject = new ParseObject("UserToEvent");
         newParseObject.put("UserFbId", creatorId);
         newParseObject.put("EventId", eventId);
+        newParseObject.put("UserName", creatorName);
         newParseObject.saveInBackground();
 
         //Add all the invitees Ids
-        for (String fbId : friendsIds) {
+        for (int i=0; i<friendsIds.size(); i++) {
             newParseObject = new ParseObject("UserToEvent");
-            newParseObject.put("UserFbId", fbId);
+            newParseObject.put("UserFbId", friendsIds.get(i));
             newParseObject.put("EventId", eventId);
+            newParseObject.put("UserName", friendsNames.get(i));
             newParseObject.saveInBackground();
         }
     }
