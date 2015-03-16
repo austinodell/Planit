@@ -59,18 +59,6 @@ public class Home extends ToolbarActivity {
         // Setup Adapter
         GridView gridView = (GridView) findViewById(R.id.container);
         gridView.setAdapter(new HomeGridAdapter(this, eventsList, imgLib));
-        /*
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick");
-                Log.d(TAG, Integer.toString(position));
-                Log.d(TAG, eventsList.get(position).getName());
-                viewEventIntent = new Intent(getApplicationContext(),ViewEvent.class);
-                viewEventIntent.putExtra("EventObjectId", eventsList.get(position).getId());
-                startActivity(viewEventIntent);
-            }
-        });*/
 
         // Add New Event Button Setup
         Button new_event_btn = (Button) findViewById(R.id.new_event_btn);
