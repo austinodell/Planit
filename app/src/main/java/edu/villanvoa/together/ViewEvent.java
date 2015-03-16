@@ -1,6 +1,8 @@
 package edu.villanvoa.together;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,11 +11,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -88,27 +95,6 @@ public class ViewEvent extends ToolbarActivity {
         else {
             Log.d(TAG, "ObjectId is null");
         }
-//        addFriendToGrid("10206106201596623","Andrew Walters",true);
-//        addFriendToGrid("10153062089109882","Andy Rinaldi",true);
-//        addFriendToGrid("10204703776492383","Carlos Alejandro Gallardo",true);
-//        addFriendToGrid("1020156028013792","Matt Wiedmeier",true);
-//        addFriendToGrid("10206307009142454","Melissa Sustaita",true);
-//        addFriendToGrid("10202752169485847","Olivia Greene",true);
-//        addFriendToGrid("10206202607453094","Ricky Baum",true);
-//        addFriendToGrid("10153204634714903","Stephanie Molina",true);
-//        addFriendToGrid("10206106201596623","Andrew Walters",true);
-//        addFriendToGrid("10153062089109882","Andy Rinaldi",true);
-//        addFriendToGrid("10204703776492383","Carlos Alejandro Gallardo",true);
-//        addFriendToGrid("1020156028013792","Matt Wiedmeier",true);
-//        addFriendToGrid("10206307009142454","Melissa Sustaita",true);
-//        addFriendToGrid("10202752169485846","Olivia Greene",true);
-//        addFriendToGrid("10206202607453094","Ricky Baum",true);
-//        addFriendToGrid("10153204634714903","Stephanie Molina",true);
-//        addFriendToGrid("10206106201596623","Andrew Walters",true);
-//        addFriendToGrid("10153062089109882","Andy Rinaldi",true);
-//        addFriendToGrid("10204703776492383","Carlos Alejandro Gallardo",true);
-//        addFriendToGrid("1020156028013792","Matt Wiedmeier",true);
-//        addFriendToGrid("10206307009142454","Melissa Sustaita",true);
 
         Log.i(TAG,"ViewEvent Friends Added");
 
@@ -118,6 +104,9 @@ public class ViewEvent extends ToolbarActivity {
         eventFriendsGV = (FullGridView) findViewById(R.id.view_event_friends_container);
         eventIdeasTable = (FullGridView) findViewById(R.id.view_event_ideas_container);
 
+        EventPictureSelector pictureSelector = new EventPictureSelector();
+        eventImg.setImageResource(pictureSelector.getImgResource());
+
         eventDesc.setText(eventDetails);
         eventTime.setText("Time: 9:00pm - 1:00am");
 
@@ -126,18 +115,6 @@ public class ViewEvent extends ToolbarActivity {
 
         ideasList = new ArrayList<Idea>();
         addIdeasFromParse(eventObjectId);
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
-//        addIdeaToList("Idea Name","Idea Description");
 
         ideaListAdapter = new IdeaListAdapter(this,ideasList);
         eventIdeasTable.setAdapter(ideaListAdapter);
@@ -199,7 +176,7 @@ public class ViewEvent extends ToolbarActivity {
         idea.setDesc(description);
         ideasList.add(idea);
 
-        Log.i(TAG,"ViewEvent Idea ("+idea.getId()+") Added");
+        Log.i(TAG, "ViewEvent Idea (" + idea.getId() + ") Added");
     }
 
     @Override
