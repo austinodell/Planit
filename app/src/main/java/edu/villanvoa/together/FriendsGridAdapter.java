@@ -23,19 +23,22 @@ public class FriendsGridAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private View btnView;
     private GridView gridView;
+    private ImageLib imgLib = null;
 
-    public FriendsGridAdapter(Context context, ArrayList<Friend> list, View btnView, GridView gridView) {
+    public FriendsGridAdapter(Context context, ArrayList<Friend> list, View btnView, GridView gridView, ImageLib imgLib) {
         mInflater = LayoutInflater.from(context);
         mFriend = list;
         this.btnView = btnView;
         this.gridView = gridView;
+        this.imgLib = imgLib;
     }
 
-    public FriendsGridAdapter(Context context, ArrayList<Friend> list, GridView gridView) {
+    public FriendsGridAdapter(Context context, ArrayList<Friend> list, GridView gridView, ImageLib imgLib) {
         mInflater = LayoutInflater.from(context);
         mFriend = list;
         this.btnView = null;
         this.gridView = gridView;
+        this.imgLib = imgLib;
     }
 
     @Override
@@ -91,7 +94,7 @@ public class FriendsGridAdapter extends BaseAdapter {
 
 
                 String img_url = "http://graph.facebook.com/" + friend.id + "/picture?type=large";
-                AddFriends.imageLoader.displayImage(img_url, picture, AddFriends.imageOptions); // Display Image
+                imgLib.imageLoader.displayImage(img_url, picture, imgLib.imageOptions); // Display Image
 
                 int spaceIndex = friend.name.indexOf(' ');
                 String firstName = friend.name.substring(0, spaceIndex);

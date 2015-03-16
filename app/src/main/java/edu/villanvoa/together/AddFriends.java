@@ -45,12 +45,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-public class AddFriends extends ActionBarActivity {
-
-    /* UniversalImageLoader library variables */
-    static public ImageLoader imageLoader;
-    static public DisplayImageOptions imageOptions;
-    static public ImageLoaderConfiguration imageConfig;
+public class AddFriends extends ToolbarActivity {
 
     private static final List<String> PERMISSIONS = new ArrayList<String>() {
         {
@@ -89,13 +84,7 @@ public class AddFriends extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
 
-        /* Set up toolbar to replace Actionbar */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar mSupportActionBar = getSupportActionBar();
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setTitle(R.string.title_activity_add_friends);
+        setupToolbar(R.string.title_activity_add_friends);
 
         callingIntent = getIntent();
         pickDateIntent = new Intent(this, PickDateActivity.class);
@@ -110,18 +99,7 @@ public class AddFriends extends ActionBarActivity {
 
         ensureOpenSession();
 
-        /* Set up UniversalImageLoader library variables */
-        imageConfig = new ImageLoaderConfiguration.Builder(this)
-                .build();
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(imageConfig);
-
-        imageOptions = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_launcher)
-                .showImageForEmptyUri(R.drawable.ic_launcher)
-                .showImageOnFail(R.drawable.ic_launcher)
-                .cacheOnDisk(true)
-                .build();
+        ImageLib imgLib = new ImageLib(this);
 
         event_name = (EditText) findViewById(R.id.event_name_et);
         event_details = (EditText) findViewById(R.id.event_details_et);
@@ -146,7 +124,7 @@ public class AddFriends extends ActionBarActivity {
             }
         });
 
-        friendsGridAdapter = new FriendsGridAdapter(this,friendsList,btnView,gridView);
+        friendsGridAdapter = new FriendsGridAdapter(this,friendsList,btnView,gridView,imgLib);
         gridView.setAdapter(friendsGridAdapter);
 
         final ImageButton nextBtn = (ImageButton) findViewById(R.id.next_page_btn);

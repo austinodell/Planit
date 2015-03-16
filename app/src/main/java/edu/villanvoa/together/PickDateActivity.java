@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class PickDateActivity extends ActionBarActivity {
+public class PickDateActivity extends ToolbarActivity {
 
     private static final String TAG = "Debugging";
 
@@ -58,13 +58,7 @@ public class PickDateActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_date);
 
-        /* Set up toolbar to replace Actionbar */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar mSupportActionBar = getSupportActionBar();
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setTitle(R.string.title_activity_pick_date);
+        setupToolbar(R.string.title_activity_pick_date);
 
         callingIntent = getIntent();
 

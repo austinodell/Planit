@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class
-        ViewEvent extends ActionBarActivity {
+public class ViewEvent extends ToolbarActivity {
 
     private String TAG = "edu.villanvoa.together.ViewEvent";
 
@@ -65,39 +64,19 @@ public class
         //Get eventObjectId from calling activity
         eventObjectId = getIntent().getStringExtra("EventObjectId");
 
-        /* Set up toolbar to replace Actionbar */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         ParseQuery eventQuery = ParseQuery.getQuery("Event");
         eventQuery.whereEqualTo("objectId", eventObjectId);
         try {
             ParseObject eventObject = eventQuery.getFirst();
             eventDetails = eventObject.getString("Details");
             eventTitle = eventObject.getString("Title");
-            toolbar.setTitle(eventTitle);
+            setupToolbar(eventTitle);
         } catch (ParseException e) {
             e.printStackTrace();
             Log.d(TAG, e.toString());
         }
 
-        setSupportActionBar(toolbar);
-        ActionBar mSupportActionBar = getSupportActionBar();
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-
-
-        /* Set up UniversalImageLoader library variables */
-        imageConfig = new ImageLoaderConfiguration.Builder(this)
-                .build();
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(imageConfig);
-
-        imageOptions = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_launcher)
-                .showImageForEmptyUri(R.drawable.ic_launcher)
-                .showImageOnFail(R.drawable.ic_launcher)
-                .cacheOnDisk(true)
-                .build();
+        ImageLib imgLib = new ImageLib(this);
 
         Log.i(TAG,"ViewEvent ImageLoader initialized");
 
@@ -141,7 +120,7 @@ public class
         eventDesc.setText(eventDetails);
         eventTime.setText("Time: 9:00pm - 1:00am");
 
-        friendsGridAdapter = new FriendsGridAdapter(this,friendsList,eventFriendsGV);
+        friendsGridAdapter = new FriendsGridAdapter(this,friendsList,eventFriendsGV,imgLib);
         eventFriendsGV.setAdapter(friendsGridAdapter);
 
         ideasList = new ArrayList<Idea>();
