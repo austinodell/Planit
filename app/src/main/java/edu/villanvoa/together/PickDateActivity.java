@@ -190,6 +190,7 @@ public class PickDateActivity extends ToolbarActivity {
 
                         Intent viewEventIntent = new Intent(getApplicationContext(),ViewEvent.class);
                         viewEventIntent.putExtra("EventObjectId", objectId);
+                        viewEventIntent.setFlags(viewEventIntent.FLAG_ACTIVITY_NEW_TASK | viewEventIntent.FLAG_ACTIVITY_TASK_ON_HOME);
                         startActivity(viewEventIntent);
                     } else {
                         Log.d(TAG, "objectId is null");

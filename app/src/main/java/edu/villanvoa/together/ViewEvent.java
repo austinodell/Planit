@@ -52,13 +52,14 @@ public class ViewEvent extends ToolbarActivity {
     static public ImageLoaderConfiguration imageConfig;
 
     private Intent addIdeaIntent;
+    private Intent homeIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-        Log.i(TAG,"Started ViewEvent");
+        Log.i(TAG, "Started ViewEvent");
         Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
         //Get eventObjectId from calling activity
@@ -199,5 +200,13 @@ public class ViewEvent extends ToolbarActivity {
         ideasList.add(idea);
 
         Log.i(TAG,"ViewEvent Idea ("+idea.getId()+") Added");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        homeIntent = new Intent(this, Home.class);
+        homeIntent.setFlags(homeIntent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
     }
 }

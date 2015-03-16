@@ -104,6 +104,5 @@ public class NewIdea extends ActionBarActivity {
 
         //Launch the intent
         startActivity(returnIdea);
-
     }
 }
