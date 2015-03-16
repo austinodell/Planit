@@ -53,23 +53,13 @@ public class Home extends ToolbarActivity {
         // Used to store all events to pass to HomeGridAdapter
         eventsList = new ArrayList<Event>();
 
+        // Populate Events List
         addEventsFromParse(userFbId);
-//        addEvent(this.event_id++,"Movie Night","http://images.clipartpanda.com/movie-night-clipart-9cp4q9xcE.jpeg"); // Example with image to fetch
-//        addEvent(this.event_id++,"Bowling",R.drawable.bowl); // Examples with image to use drawable ids
-//        addEvent(this.event_id++,"Passion Pit Show",R.drawable.contert_big);
-//        addEvent(this.event_id++,"Restaurant Week",R.drawable.dinner);
-//        addEvent(this.event_id++,"Bar Hop",R.drawable.bar);
-//        addEvent(this.event_id++,"Club Shampoo",R.drawable.club);
-//        addEvent(this.event_id++,"KOP",R.drawable.shop);
-//        addEvent(this.event_id++,"S'mores",R.drawable.smores);
-//        addEvent(this.event_id++,"Picnic on Sheehan Beach",R.drawable.picnic);
-//        addEvent(this.event_id++,"Game at Wells Fargo",R.drawable.basketball);
-//        addEvent(this.event_id++,"Blue Mountain",R.drawable.ski);
-//        addEvent(this.event_id++,"Road Trip to Boston",R.drawable.roadtrip);
 
         // Setup Adapter
         GridView gridView = (GridView) findViewById(R.id.container);
         gridView.setAdapter(new HomeGridAdapter(this, eventsList, imgLib));
+        /*
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -80,9 +70,7 @@ public class Home extends ToolbarActivity {
                 viewEventIntent.putExtra("EventObjectId", eventsList.get(position).getId());
                 startActivity(viewEventIntent);
             }
-        });
-
-
+        });*/
 
         // Add New Event Button Setup
         Button new_event_btn = (Button) findViewById(R.id.new_event_btn);

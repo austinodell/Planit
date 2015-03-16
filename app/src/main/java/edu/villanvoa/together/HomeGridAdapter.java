@@ -1,6 +1,8 @@
 package edu.villanvoa.together;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeGridAdapter extends BaseAdapter {
+    private static final String TAG = "Debugging";
+
     private List<Event> mEvent;
     private final LayoutInflater mInflater;
     private ImageLib imgLib;
+    private Context mContext;
 
     public HomeGridAdapter(Context context, ArrayList<Event> list, ImageLib imgLib) {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
         mEvent = list;
         this.imgLib = imgLib;
@@ -53,7 +59,7 @@ public class HomeGridAdapter extends BaseAdapter {
         picture = (ImageView) v.getTag(R.id.event_img);
         name = (TextView) v.getTag(R.id.event_tv);
 
-        Event event = getItem(i);
+        final Event event = getItem(i);
 
         if(!event.imgIsURL()) {
             picture.setImageResource(event.getImageResource());
@@ -62,6 +68,17 @@ public class HomeGridAdapter extends BaseAdapter {
         }
 
         name.setText(event.getName());
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Event (onItemClick): " + event.getName());
+
+                Intent viewEventIntent = new Intent(mContext,ViewEvent.class);
+                viewEventIntent.putExtra("EventObjectId", event.getId());
+                mContext.startActivity(viewEventIntent);
+            }
+        });
 
         return v;
     }
