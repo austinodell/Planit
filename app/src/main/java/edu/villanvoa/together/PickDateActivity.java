@@ -185,7 +185,7 @@ public class PickDateActivity extends ToolbarActivity {
                 if ((eventDate != null) && (startTime != null && (endTime != null))) {
                     objectId = createEvent(eventTitle, eventDetails, eventDate, startTime, endTime, creatorId);
                     if (objectId != null) {
-                        addUsersToEvent(creatorId, creatorName, friendsIds, objectId, friendsNames);
+                        addUsersToEvent(creatorId, creatorName, friendsIds, objectId, eventTitle, friendsNames);
                         inviteFriends(friendsIds, creatorFirstName, eventTitle);
 
                         Intent viewEventIntent = new Intent(getApplicationContext(),ViewEvent.class);
@@ -224,12 +224,13 @@ public class PickDateActivity extends ToolbarActivity {
     }
 
     //Add each user to the UserToEvent table on parse
-    private void addUsersToEvent(String creatorId, String creatorName, ArrayList<String> friendsIds, String eventId, ArrayList<String> friendsNames) {
+    private void addUsersToEvent(String creatorId, String creatorName, ArrayList<String> friendsIds, String eventId, String eventTitle, ArrayList<String> friendsNames) {
         //Add creator id
         newParseObject = new ParseObject("UserToEvent");
         newParseObject.put("UserFbId", creatorId);
         newParseObject.put("EventId", eventId);
         newParseObject.put("UserName", creatorName);
+        newParseObject.put("EventTitle", eventTitle);
         newParseObject.saveInBackground();
 
         //Add all the invitees Ids
@@ -238,6 +239,7 @@ public class PickDateActivity extends ToolbarActivity {
             newParseObject.put("UserFbId", friendsIds.get(i));
             newParseObject.put("EventId", eventId);
             newParseObject.put("UserName", friendsNames.get(i));
+            newParseObject.put("EventTitle", eventTitle);
             newParseObject.saveInBackground();
         }
     }

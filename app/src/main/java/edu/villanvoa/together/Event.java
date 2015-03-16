@@ -7,15 +7,15 @@ public class Event {
     private String name;
     private int drawableId;
     private String imageURL = null;
-    private int id;
+    private String id;
 
-    public Event(int id, String name, int drawableId) {
+    public Event(String id, String name, int drawableId) {
         this.id = id;
         this.name = name;
         this.drawableId = drawableId;
     }
 
-    public Event(int id, String name, String imageURL) {
+    public Event(String id, String name, String imageURL) {
         this.id = id;
         this.name = name;
         this.imageURL = imageURL;
@@ -50,7 +50,7 @@ public class Event {
         return this.drawableId;
     }
 
-    public int getId() {
+    public String getId() {
         return this.id;
     }
 }

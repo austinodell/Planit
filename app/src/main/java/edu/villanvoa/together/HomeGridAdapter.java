@@ -34,7 +34,8 @@ public class HomeGridAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return mEvent.get(i).getId();
+        //return Integer.parseInt(mEvent.get(i).getId());
+        return 0;
     }
 
     @Override
@@ -64,4 +65,7 @@ public class HomeGridAdapter extends BaseAdapter {
 
         return v;
     }
+
+
+
 }
