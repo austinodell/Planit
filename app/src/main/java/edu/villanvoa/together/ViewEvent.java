@@ -38,7 +38,9 @@ public class ViewEvent extends ToolbarActivity {
 
     private String TAG = "edu.villanvoa.together.ViewEvent";
 
-    private String eventObjectId, eventTitle, eventDetails;
+    private String eventObjectId, eventTitle, eventDetails, eventImgUrl;
+    private boolean eventImgLocal;
+    private int eventImgResource;
 
     private ImageView eventImg;
     private TextView eventDesc;
@@ -79,6 +81,12 @@ public class ViewEvent extends ToolbarActivity {
             eventDetails = eventObject.getString("Details");
             eventTitle = eventObject.getString("Title");
             setupToolbar(eventTitle);
+            eventImgLocal = eventObject.getBoolean("ImageType");
+            if(eventImgLocal) {
+                eventImgResource = eventObject.getInt("ImageSrc");
+            } else {
+                eventImgUrl = eventObject.getString("ImageSrc");
+            }
         } catch (ParseException e) {
             e.printStackTrace();
             Log.d(TAG, e.toString());
@@ -104,8 +112,19 @@ public class ViewEvent extends ToolbarActivity {
         eventFriendsGV = (FullGridView) findViewById(R.id.view_event_friends_container);
         eventIdeasTable = (FullGridView) findViewById(R.id.view_event_ideas_container);
 
-        EventPictureSelector pictureSelector = new EventPictureSelector();
-        eventImg.setImageResource(pictureSelector.getImgResource());
+        //EventPictureSelector pictureSelector = new EventPictureSelector();
+        //eventImg.setImageResource(pictureSelector.getImgResource());
+
+        if(eventImgLocal) {
+            eventImg.setImageResource(eventImgResource);
+        } else {
+            if(eventImgUrl == null) {
+                eventImg.setImageResource(R.drawable.bar);
+            } else {
+                String img_url = "http://planit.austinodell.com/img/" + eventImgUrl;
+                imgLib.imageLoader.displayImage(img_url, eventImg, imgLib.imageOptions); // Display Image
+            }
+        }
 
         eventDesc.setText(eventDetails);
         eventTime.setText("Time: 9:00pm - 1:00am");

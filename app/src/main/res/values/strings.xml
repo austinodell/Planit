@@ -26,4 +26,18 @@
     <string name="title_activity_new_idea">NewIdea</string>
     <string name="title_activity_view_event">ViewEvent</string>
 
+    <string-array name="new_event_spinner">
+        <item>Bar</item>
+        <item>Basketball</item>
+        <item>Bowl</item>
+        <item>Club</item>
+        <item>Concert</item>
+        <item>Dinner</item>
+        <item>Movie</item>
+        <item>Picnic</item>
+        <item>Roadtrip</item>
+        <item>Shop</item>
+        <item>Ski</item>
+        <item>Smores</item>
+    </string-array>
 </resources>

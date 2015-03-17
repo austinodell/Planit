@@ -46,7 +46,9 @@ public class PickDateActivity extends ToolbarActivity {
     ImageButton nextButton;
     TextView dateTextView, timeTextView1, timeTextView2;
 
-    String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId, creatorFirstName, creatorName;
+    String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId, creatorFirstName, creatorName, eventImgUrl;
+    int eventImgResource;
+    boolean eventImgLocal;
     GraphUser user;
     ArrayList<String> friendsIds = new ArrayList<>();
     ArrayList<String> friendsNames = new ArrayList<>();
@@ -73,6 +75,13 @@ public class PickDateActivity extends ToolbarActivity {
         eventDetails = String.valueOf(callingIntent.getCharSequenceExtra("EventDetails"));
         friendsNames = callingIntent.getStringArrayListExtra("FriendsNames");
         friendsIds = callingIntent.getStringArrayListExtra("FriendsIds");
+        eventImgLocal = callingIntent.getBooleanExtra("EventImageLocal",true);
+        if(eventImgLocal) {
+            eventImgResource = callingIntent.getIntExtra("EventImageSrc",R.drawable.bar);
+        } else {
+            eventImgUrl = callingIntent.getStringExtra("EventImageSrc");
+        }
+
         SharedPreferences sharedPreferences;
         sharedPreferences = this.getSharedPreferences("UserDetails", MainActivity.MODE_PRIVATE);
         creatorFirstName = sharedPreferences.getString("UserFirstName", null);
@@ -183,7 +192,7 @@ public class PickDateActivity extends ToolbarActivity {
             @Override
             public void onClick(View v) {
                 if ((eventDate != null) && (startTime != null && (endTime != null))) {
-                    objectId = createEvent(eventTitle, eventDetails, eventDate, startTime, endTime, creatorId);
+                    objectId = createEvent(eventTitle, eventDetails, eventDate, startTime, endTime, creatorId, eventImgLocal, eventImgUrl, eventImgResource);
                     if (objectId != null) {
                         addUsersToEvent(creatorId, creatorName, friendsIds, objectId, eventTitle, friendsNames);
                         inviteFriends(friendsIds, creatorFirstName, eventTitle);
@@ -203,7 +212,9 @@ public class PickDateActivity extends ToolbarActivity {
 
     //Create event on parse
     private String createEvent(final String eventTitle, final String eventDetails,
-                               final String eventDate, final String startTime, final String endTime, final String creatorId) {
+                               final String eventDate, final String startTime, final String endTime,
+                               final String creatorId, final boolean eventImgLocal,
+                               final String eventImgUrl, final int eventImgResource) {
 
         ParseApplication.init(this);
 
@@ -214,6 +225,8 @@ public class PickDateActivity extends ToolbarActivity {
         newParseObject.put("StartTime", startTime);
         newParseObject.put("EndTime", endTime);
         newParseObject.put("CreatorId", creatorId);
+        newParseObject.put("ImageType", eventImgLocal);
+        newParseObject.put("ImageSrc", eventImgLocal ? eventImgResource : eventImgUrl);
 
         // saves it to parse.com
         try {

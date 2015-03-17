@@ -16,8 +16,11 @@ public class ImageLib {
     static public DisplayImageOptions imageOptions = null;
     static public ImageLoaderConfiguration imageConfig = null;
 
+    private Context mContext;
+
     public ImageLib(Context mContext) {
         setupIfNeeded(mContext);
+        this.mContext = mContext;
     }
 
     public void setupIfNeeded(Context mContext) {
@@ -34,5 +37,11 @@ public class ImageLib {
                     .cacheOnDisk(true)
                     .build();
         }
+    }
+
+    public int getResId(String name) {
+        int resid = mContext.getResources().getIdentifier(name.toLowerCase(), "drawable", mContext.getPackageName());
+
+        return resid;
     }
 }
