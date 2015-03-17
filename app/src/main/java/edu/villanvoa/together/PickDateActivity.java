@@ -226,7 +226,8 @@ public class PickDateActivity extends ToolbarActivity {
         newParseObject.put("EndTime", endTime);
         newParseObject.put("CreatorId", creatorId);
         newParseObject.put("ImageType", eventImgLocal);
-        newParseObject.put("ImageSrc", eventImgLocal ? eventImgResource : eventImgUrl);
+        newParseObject.put("ImageURL", eventImgLocal ? "" : eventImgUrl);
+        newParseObject.put("ImageResID", eventImgLocal ? eventImgResource : 0);
 
         // saves it to parse.com
         try {

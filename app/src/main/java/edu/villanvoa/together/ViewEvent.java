@@ -83,9 +83,9 @@ public class ViewEvent extends ToolbarActivity {
             setupToolbar(eventTitle);
             eventImgLocal = eventObject.getBoolean("ImageType");
             if(eventImgLocal) {
-                eventImgResource = eventObject.getInt("ImageSrc");
+                eventImgResource = eventObject.getInt("ImageResID");
             } else {
-                eventImgUrl = eventObject.getString("ImageSrc");
+                eventImgUrl = eventObject.getString("ImageURL");
             }
         } catch (ParseException e) {
             e.printStackTrace();
