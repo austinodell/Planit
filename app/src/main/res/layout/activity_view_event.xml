@@ -20,6 +20,7 @@
                     android:id="@+id/view_event_img"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:maxHeight="400dp"
                     android:layout_alignParentStart="true"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"

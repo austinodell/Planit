@@ -42,6 +42,8 @@ public class ViewEvent extends ToolbarActivity {
     private boolean eventImgLocal;
     private int eventImgResource;
 
+    private ImageLib imgLib;
+
     private ImageView eventImg;
     private TextView eventDesc;
     private TextView eventTime;
@@ -71,19 +73,30 @@ public class ViewEvent extends ToolbarActivity {
         Log.i(TAG, "Started ViewEvent");
         Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
+        imgLib = new ImageLib(this);
+
         //Get eventObjectId from calling activity
         eventObjectId = getIntent().getStringExtra("EventObjectId");
 
-        ParseQuery eventQuery = ParseQuery.getQuery("Event");
+        ParseObject eventObject;
+        ParseQuery<ParseObject> eventQuery = ParseQuery.getQuery("Event");
         eventQuery.whereEqualTo("objectId", eventObjectId);
+
+        Log.i(TAG,"EventObjectId = " + eventObjectId);
+
         try {
-            ParseObject eventObject = eventQuery.getFirst();
+            eventObject = eventQuery.find().get(0);
             eventDetails = eventObject.getString("Details");
             eventTitle = eventObject.getString("Title");
             setupToolbar(eventTitle);
-            eventImgLocal = eventObject.getBoolean("ImageType");
+            eventImgLocal = eventObject.getString("ImageType").equals("local") ? true : false;
             if(eventImgLocal) {
-                eventImgResource = eventObject.getInt("ImageResID");
+                String temp_resid = eventObject.getString("ImageResID");
+                if(temp_resid != null && !temp_resid.equals("")) {
+                    eventImgResource = imgLib.getResId(temp_resid);
+                } else {
+                    eventImgResource = R.drawable.bowl;
+                }
             } else {
                 eventImgUrl = eventObject.getString("ImageURL");
             }

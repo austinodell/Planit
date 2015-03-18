@@ -46,8 +46,7 @@ public class PickDateActivity extends ToolbarActivity {
     ImageButton nextButton;
     TextView dateTextView, timeTextView1, timeTextView2;
 
-    String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId, creatorFirstName, creatorName, eventImgUrl;
-    int eventImgResource;
+    String eventDate, startTime, endTime, eventTitle, eventDetails, objectId, creatorId, creatorFirstName, creatorName, eventImgUrl = "", eventImgResource = "";
     boolean eventImgLocal;
     GraphUser user;
     ArrayList<String> friendsIds = new ArrayList<>();
@@ -76,10 +75,11 @@ public class PickDateActivity extends ToolbarActivity {
         friendsNames = callingIntent.getStringArrayListExtra("FriendsNames");
         friendsIds = callingIntent.getStringArrayListExtra("FriendsIds");
         eventImgLocal = callingIntent.getBooleanExtra("EventImageLocal",true);
-        if(eventImgLocal) {
-            eventImgResource = callingIntent.getIntExtra("EventImageSrc",R.drawable.bar);
-        } else {
-            eventImgUrl = callingIntent.getStringExtra("EventImageSrc");
+        eventImgResource = callingIntent.getStringExtra("EventImageResource");
+        eventImgUrl = callingIntent.getStringExtra("EventImageUrl");
+
+        if(eventImgUrl == null) {
+            eventImgUrl = "";
         }
 
         SharedPreferences sharedPreferences;
@@ -214,7 +214,7 @@ public class PickDateActivity extends ToolbarActivity {
     private String createEvent(final String eventTitle, final String eventDetails,
                                final String eventDate, final String startTime, final String endTime,
                                final String creatorId, final boolean eventImgLocal,
-                               final String eventImgUrl, final int eventImgResource) {
+                               final String eventImgUrl, final String eventImgResource) {
 
         ParseApplication.init(this);
 
@@ -225,9 +225,9 @@ public class PickDateActivity extends ToolbarActivity {
         newParseObject.put("StartTime", startTime);
         newParseObject.put("EndTime", endTime);
         newParseObject.put("CreatorId", creatorId);
-        newParseObject.put("ImageType", eventImgLocal);
-        newParseObject.put("ImageURL", eventImgLocal ? "" : eventImgUrl);
-        newParseObject.put("ImageResID", eventImgLocal ? eventImgResource : 0);
+        newParseObject.put("ImageType", eventImgLocal ? "local" : "remote");
+        newParseObject.put("ImageURL", eventImgUrl);
+        newParseObject.put("ImageResID", eventImgResource);
 
         // saves it to parse.com
         try {

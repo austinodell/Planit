@@ -31,9 +31,10 @@ public class ImageLib {
             imageLoader.init(imageConfig);
 
             imageOptions = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.drawable.ic_launcher)
-                    .showImageForEmptyUri(R.drawable.ic_launcher)
-                    .showImageOnFail(R.drawable.ic_launcher)
+                    .showImageOnLoading(R.drawable.picnic)
+                    .showImageForEmptyUri(R.drawable.picnic)
+                    .showImageOnFail(R.drawable.picnic)
+                    .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .build();
         }

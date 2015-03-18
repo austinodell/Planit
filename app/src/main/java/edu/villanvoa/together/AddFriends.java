@@ -104,8 +104,8 @@ public class AddFriends extends ToolbarActivity {
     private EditText event_details;
     private TextView addUserHint;
 
-    private String imgNameOnServer;
-    private int imgResource;
+    private String imgNameOnServer = null;
+    private String imgResource = null;
     private boolean imgLocal = true;
     private LayoutInflater inflator;
     private View lastSpinnerItemView;
@@ -225,7 +225,7 @@ public class AddFriends extends ToolbarActivity {
                 } else {
                     imgLocal = true;
                     TextView tv = (TextView) imageSpinner.getSelectedView().findViewById(R.id.spinner_item_tv);
-                    imgResource = imgLib.getResId(tv.getText().toString());
+                    imgResource = tv.getText().toString();
                 }
             }
 
@@ -402,11 +402,8 @@ public class AddFriends extends ToolbarActivity {
         pickDateIntent.putExtra("FriendsNames", friendsNames);
         pickDateIntent.putExtra("FriendsIds", friendsIds);
         pickDateIntent.putExtra("EventImageLocal",imgLocal);
-        if(imgLocal) {
-            pickDateIntent.putExtra("EventImageSrc", imgResource);
-        } else {
-            pickDateIntent.putExtra("EventImageSrc", imgNameOnServer);
-        }
+        pickDateIntent.putExtra("EventImageResource", imgResource);
+        pickDateIntent.putExtra("EventImageUrl", imgNameOnServer);
 
         Log.i(TAG,"EventTitle: " + event_name.getText());
         Log.i(TAG,"EventDetails: " + event_details.getText());

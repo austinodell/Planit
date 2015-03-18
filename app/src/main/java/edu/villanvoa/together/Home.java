@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -31,6 +32,8 @@ public class Home extends ToolbarActivity {
     private String userFbId;
     private Intent viewEventIntent;
 
+    private ImageLib imgLib;
+
     private int event_id = 0; // temporary - to be populated by Parse
 
     @Override
@@ -39,6 +42,8 @@ public class Home extends ToolbarActivity {
         setContentView(R.layout.activity_home);
 
         mContext = this;
+
+        imgLib = new ImageLib(this);
 
         setupToolbar(R.string.title_activity_home);
 
@@ -72,16 +77,34 @@ public class Home extends ToolbarActivity {
 
     //Add users events from the parse database
     private void addEventsFromParse(String userFbId) {
-        ParseObject parseObject;
+        ParseObject parseObject, eventObject;
         List<ParseObject> parseObjects;
+
         if (userFbId != null) {
             ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("UserToEvent");
             queryAll.whereEqualTo("UserFbId", userFbId);
             try {
                 parseObjects = queryAll.find();
+                Log.i(TAG,"query # events = " + parseObjects.size());
                 for (int i = 0; i < parseObjects.size(); i++) {
                     parseObject = parseObjects.get(i);
-                    addEvent(parseObject.getString("EventId"), parseObject.getString("EventTitle"), R.drawable.club);
+                    ParseQuery<ParseObject> eventQuery = ParseQuery.getQuery("Event");
+                    eventQuery.whereEqualTo("objectId",parseObject.getString("EventId"));
+                    eventObject = eventQuery.find().get(0);
+
+                    String imgLocalString = eventObject.getString("ImageType");
+                    if(imgLocalString == null) {
+                        imgLocalString = "local";
+                    }
+                    if(imgLocalString.equals("local")) {
+                        if(eventObject.getString("ImageResID") != null && !eventObject.getString("ImageResID").equals("")) {
+                            addEvent(parseObject.getString("EventId"), eventObject.getString("Title"), true, eventObject.getString("ImageResID"));
+                        } else {
+                            addEvent(parseObject.getString("EventId"), eventObject.getString("Title"));
+                        }
+                    } else {
+                        addEvent(parseObject.getString("EventId"), eventObject.getString("Title"), false, "http://planit.austinodell.com/img/" + eventObject.getString("ImageURL"));
+                    }
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -92,15 +115,21 @@ public class Home extends ToolbarActivity {
         }
     }
 
-    // Add event with Image URL
-    private void addEvent(String id, String name, String img_url) {
-        Event event = new Event(id, name, img_url);
+    // Add event with Image Drawable Resource (preloaded) or URL (downloaded)
+    private void addEvent(String id, String name, boolean imgLocal, String img) {
+        Event event;
+        if(imgLocal) {
+            int res_id = imgLib.getResId(img);
+            event = new Event(id, name, res_id);
+        } else {
+            event = new Event(id, name, img);
+        }
         eventsList.add(event);
     }
 
-    // Add event with Image Drawable Resource (preloaded)
-    private void addEvent(String id, String name, int img_resid) {
-        Event event = new Event(id, name, img_resid);
+    // Add event with no predefined image
+    private void addEvent(String id, String name) {
+        Event event = new Event(id, name, R.drawable.picnic);
         eventsList.add(event);
     }
 }
