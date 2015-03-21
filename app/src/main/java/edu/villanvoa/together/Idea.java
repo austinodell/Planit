@@ -8,9 +8,11 @@ public class Idea {
     private String loc;
     private String desc;
     private int id;
+    private String parseID;
 
-    public Idea(String name) {
+    public Idea(String name, String parseID) {
         this.name = name;
+        this.parseID = parseID;
         this.id = 1;
     }
 
@@ -37,4 +39,6 @@ public class Idea {
     public int getId() {
         return this.id;
     }
+
+    public String getParseID() { return this.parseID; }
 }

@@ -70,6 +70,10 @@
             android:name=".ViewEvent"
             android:label="@string/title_activity_view_event" >
         </activity>
+        <activity
+            android:name=".IdeaDiscussion"
+            android:label="IdeaDiscussion">
+        </activity>
     </application>
 
 </manifest>

@@ -3,17 +3,15 @@ package edu.villanvoa.together;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -62,8 +60,8 @@ public class ViewEvent extends ToolbarActivity {
     static public DisplayImageOptions imageOptions;
     static public ImageLoaderConfiguration imageConfig;
 
-    private Intent addIdeaIntent;
     private Intent homeIntent;
+    private Intent addIdeaIntent,ideaDiscussionIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +149,18 @@ public class ViewEvent extends ToolbarActivity {
         ideaListAdapter = new IdeaListAdapter(this,ideasList);
         eventIdeasTable.setAdapter(ideaListAdapter);
 
+        eventIdeasTable.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Idea selectedIdea = ideasList.get(position);
+                ideaDiscussionIntent = new Intent(getApplicationContext(),IdeaDiscussion.class);
+                ideaDiscussionIntent.putExtra("ideaID",selectedIdea.getParseID());
+
+                startActivity(ideaDiscussionIntent);
+            }
+        });
+
+
         addIdeaButton = (Button) findViewById(R.id.addIdeaButton);
         addIdeaButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,7 +205,7 @@ public class ViewEvent extends ToolbarActivity {
             parseObjects = userToEventQuery.find();
             for (int i=0; i<parseObjects.size(); i++) {
                 parseObject = parseObjects.get(i);
-                addIdeaToList(parseObject.getString("Title"), parseObject.getString("Details"));
+                addIdeaToList(parseObject.getString("Title"), parseObject.getString("Details"), parseObject.getString("Location"),parseObject.getObjectId());
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -203,9 +213,10 @@ public class ViewEvent extends ToolbarActivity {
         }
     }
 
-    private void addIdeaToList(String name, String description) {
-        Idea idea = new Idea(name);
+    private void addIdeaToList(String name, String description, String location, String objectID) {
+        Idea idea = new Idea(name, objectID);
         idea.setDesc(description);
+        idea.setLoc(location);
         ideasList.add(idea);
 
         Log.i(TAG, "ViewEvent Idea (" + idea.getId() + ") Added");
