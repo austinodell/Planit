@@ -1,6 +1,7 @@
 package edu.villanvoa.together;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -36,7 +37,7 @@ public class ViewEvent extends ToolbarActivity {
 
     private String TAG = "edu.villanvoa.together.ViewEvent";
 
-    private String eventObjectId, eventTitle, eventDetails, eventImgUrl;
+    private String eventObjectId, eventTitle, eventDetails, eventImgUrl, userFbId, eventDate;
     private boolean eventImgLocal;
     private int eventImgResource;
 
@@ -61,7 +62,9 @@ public class ViewEvent extends ToolbarActivity {
     static public ImageLoaderConfiguration imageConfig;
 
     private Intent homeIntent;
-    private Intent addIdeaIntent,ideaDiscussionIntent;
+    private Intent addIdeaIntent, ideaDiscussionIntent;
+
+    List<TimeAvailable> userTimesList = new ArrayList<TimeAvailable>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,26 +74,32 @@ public class ViewEvent extends ToolbarActivity {
         Log.i(TAG, "Started ViewEvent");
         Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
+
         imgLib = new ImageLib(this);
 
         //Get eventObjectId from calling activity
         eventObjectId = getIntent().getStringExtra("EventObjectId");
+        SharedPreferences sharedPreferences;
+        sharedPreferences = this.getSharedPreferences("UserDetails", MainActivity.MODE_PRIVATE);
+        userFbId = sharedPreferences.getString("UserFbId", null);
+        //userTimesList = getUserTimes();
 
         ParseObject eventObject;
         ParseQuery<ParseObject> eventQuery = ParseQuery.getQuery("Event");
         eventQuery.whereEqualTo("objectId", eventObjectId);
 
-        Log.i(TAG,"EventObjectId = " + eventObjectId);
+        Log.i(TAG, "EventObjectId = " + eventObjectId);
 
         try {
             eventObject = eventQuery.find().get(0);
             eventDetails = eventObject.getString("Details");
             eventTitle = eventObject.getString("Title");
+            eventDate = eventObject.getString("Date");
             setupToolbar(eventTitle);
             eventImgLocal = eventObject.getString("ImageType").equals("local") ? true : false;
-            if(eventImgLocal) {
+            if (eventImgLocal) {
                 String temp_resid = eventObject.getString("ImageResID");
-                if(temp_resid != null && !temp_resid.equals("")) {
+                if (temp_resid != null && !temp_resid.equals("")) {
                     eventImgResource = imgLib.getResId(temp_resid);
                 } else {
                     eventImgResource = R.drawable.bowl;
@@ -102,20 +111,20 @@ public class ViewEvent extends ToolbarActivity {
             e.printStackTrace();
             Log.d(TAG, e.toString());
         }
+        userTimesList = getUserTimes();
 
         ImageLib imgLib = new ImageLib(this);
 
-        Log.i(TAG,"ViewEvent ImageLoader initialized");
+        Log.i(TAG, "ViewEvent ImageLoader initialized");
 
         friendsList = new ArrayList<Friend>();
         if (eventObjectId != null) {
             addFriendsFromParse(eventObjectId);
-        }
-        else {
+        } else {
             Log.d(TAG, "ObjectId is null");
         }
 
-        Log.i(TAG,"ViewEvent Friends Added");
+        Log.i(TAG, "ViewEvent Friends Added");
 
         eventImg = (ImageView) findViewById(R.id.view_event_img);
         eventDesc = (TextView) findViewById(R.id.view_event_description);
@@ -126,10 +135,10 @@ public class ViewEvent extends ToolbarActivity {
         //EventPictureSelector pictureSelector = new EventPictureSelector();
         //eventImg.setImageResource(pictureSelector.getImgResource());
 
-        if(eventImgLocal) {
+        if (eventImgLocal) {
             eventImg.setImageResource(eventImgResource);
         } else {
-            if(eventImgUrl == null) {
+            if (eventImgUrl == null) {
                 eventImg.setImageResource(R.drawable.bar);
             } else {
                 String img_url = "http://planit.austinodell.com/img/" + eventImgUrl;
@@ -140,21 +149,21 @@ public class ViewEvent extends ToolbarActivity {
         eventDesc.setText(eventDetails);
         eventTime.setText("Time: 9:00pm - 1:00am");
 
-        friendsGridAdapter = new FriendsGridAdapter(this,friendsList,eventFriendsGV,imgLib);
+        friendsGridAdapter = new FriendsGridAdapter(this, friendsList, eventFriendsGV, imgLib);
         eventFriendsGV.setAdapter(friendsGridAdapter);
 
         ideasList = new ArrayList<Idea>();
         addIdeasFromParse(eventObjectId);
 
-        ideaListAdapter = new IdeaListAdapter(this,ideasList);
+        ideaListAdapter = new IdeaListAdapter(this, ideasList);
         eventIdeasTable.setAdapter(ideaListAdapter);
 
         eventIdeasTable.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Idea selectedIdea = ideasList.get(position);
-                ideaDiscussionIntent = new Intent(getApplicationContext(),IdeaDiscussion.class);
-                ideaDiscussionIntent.putExtra("ideaID",selectedIdea.getParseID());
+                ideaDiscussionIntent = new Intent(getApplicationContext(), IdeaDiscussion.class);
+                ideaDiscussionIntent.putExtra("ideaID", selectedIdea.getParseID());
 
                 startActivity(ideaDiscussionIntent);
             }
@@ -165,21 +174,23 @@ public class ViewEvent extends ToolbarActivity {
         addIdeaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addIdeaIntent = new Intent(getApplicationContext(),NewIdea.class);
+                addIdeaIntent = new Intent(getApplicationContext(), NewIdea.class);
                 addIdeaIntent.putExtra("EventObjectId", eventObjectId);
                 startActivity(addIdeaIntent);
             }
         });
+
+        Log.d(TAG, userTimesList.toString());
     }
 
-    private void addFriendsFromParse(String eventObjectId){
+    private void addFriendsFromParse(String eventObjectId) {
         List<ParseObject> parseObjects;
         ParseObject parseObject;
         ParseQuery<ParseObject> userToEventQuery = ParseQuery.getQuery("UserToEvent");
         userToEventQuery.whereEqualTo("EventId", eventObjectId);
         try {
             parseObjects = userToEventQuery.find();
-            for (int i=0; i<parseObjects.size(); i++) {
+            for (int i = 0; i < parseObjects.size(); i++) {
                 parseObject = parseObjects.get(i);
                 addFriendToGrid(parseObject.getString("UserFbId"), parseObject.getString("UserName"), true);
             }
@@ -193,19 +204,19 @@ public class ViewEvent extends ToolbarActivity {
         Friend friend = new Friend(id, name);
         friendsList.add(friend);
 
-        Log.i(TAG,"ViewEvent Friend ("+friend.id+") Added");
+        Log.i(TAG, "ViewEvent Friend (" + friend.id + ") Added");
     }
 
-    private void addIdeasFromParse(String eventObjectId){
+    private void addIdeasFromParse(String eventObjectId) {
         List<ParseObject> parseObjects;
         ParseObject parseObject;
         ParseQuery<ParseObject> userToEventQuery = ParseQuery.getQuery("Idea");
         userToEventQuery.whereEqualTo("EventId", eventObjectId);
         try {
             parseObjects = userToEventQuery.find();
-            for (int i=0; i<parseObjects.size(); i++) {
+            for (int i = 0; i < parseObjects.size(); i++) {
                 parseObject = parseObjects.get(i);
-                addIdeaToList(parseObject.getString("Title"), parseObject.getString("Details"), parseObject.getString("Location"),parseObject.getObjectId());
+                addIdeaToList(parseObject.getString("Title"), parseObject.getString("Details"), parseObject.getString("Location"), parseObject.getObjectId());
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -228,5 +239,55 @@ public class ViewEvent extends ToolbarActivity {
         homeIntent = new Intent(this, Home.class);
         homeIntent.setFlags(homeIntent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
+    }
+
+    private List<TimeAvailable> getUserTimes() {
+        List<TimeAvailable> userTimesList = new ArrayList<TimeAvailable>();
+
+        List<ParseObject> parseObjects;
+        ParseObject parseObject;
+        ParseQuery<ParseObject> userToEventQuery = ParseQuery.getQuery("UserToEvent");
+        userToEventQuery.whereEqualTo("EventId", eventObjectId);
+        try {
+            parseObjects = userToEventQuery.find();
+            for (int i = 0; i < parseObjects.size(); i++) {
+                parseObject = parseObjects.get(i);
+                if (parseObject.getString("StartTime") == null) {
+                    if (parseObject.getString("UserFbId").equals(userFbId)) {
+                        Log.d(TAG, "Start time null");
+                        Intent pickTimeIntent = new Intent(this, PickTimeActivity.class);
+                        pickTimeIntent.putExtra("UserFbId", parseObject.getString("UserFbId"));
+                        pickTimeIntent.putExtra("EventId", parseObject.getString("EventId"));
+                        pickTimeIntent.putExtra("EventDate", eventDate);
+                        startActivityForResult(pickTimeIntent, 0);
+                    }
+                }
+                else{
+                    userTimesList.add(new TimeAvailable(parseObject.getString("UserFbId"), parseObject.getString("StartTime"), parseObject.getString("EndTime")));
+                }
+            }
+        } catch (
+                ParseException e
+                )
+
+        {
+            e.printStackTrace();
+            Log.d(TAG, e.toString());
+        }
+
+        return userTimesList;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0) {
+            String endTime = data.getStringExtra("endTime");
+            String startTime = data.getStringExtra("startTime");
+            String userFbId = data.getStringExtra("userFbId");
+            userTimesList.add(new TimeAvailable(userFbId, startTime, endTime));
+            Log.d(TAG, userTimesList.toString());
+        }
     }
 }

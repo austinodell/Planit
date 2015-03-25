@@ -72,7 +72,11 @@
         </activity>
         <activity
             android:name=".IdeaDiscussion"
-            android:label="IdeaDiscussion">
+            android:label="IdeaDiscussion" >
+        </activity>
+        <activity
+            android:name=".PickTimeActivity"
+            android:label="@string/title_activity_pick_time" >
         </activity>
     </application>
 

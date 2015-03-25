@@ -74,11 +74,11 @@ public class PickDateActivity extends ToolbarActivity {
         eventDetails = String.valueOf(callingIntent.getCharSequenceExtra("EventDetails"));
         friendsNames = callingIntent.getStringArrayListExtra("FriendsNames");
         friendsIds = callingIntent.getStringArrayListExtra("FriendsIds");
-        eventImgLocal = callingIntent.getBooleanExtra("EventImageLocal",true);
+        eventImgLocal = callingIntent.getBooleanExtra("EventImageLocal", true);
         eventImgResource = callingIntent.getStringExtra("EventImageResource");
         eventImgUrl = callingIntent.getStringExtra("EventImageUrl");
 
-        if(eventImgUrl == null) {
+        if (eventImgUrl == null) {
             eventImgUrl = "";
         }
 
@@ -197,7 +197,7 @@ public class PickDateActivity extends ToolbarActivity {
                         addUsersToEvent(creatorId, creatorName, friendsIds, objectId, eventTitle, friendsNames);
                         inviteFriends(friendsIds, creatorFirstName, eventTitle);
 
-                        Intent viewEventIntent = new Intent(getApplicationContext(),ViewEvent.class);
+                        Intent viewEventIntent = new Intent(getApplicationContext(), ViewEvent.class);
                         viewEventIntent.putExtra("EventObjectId", objectId);
                         viewEventIntent.setFlags(viewEventIntent.FLAG_ACTIVITY_NEW_TASK | viewEventIntent.FLAG_ACTIVITY_TASK_ON_HOME);
                         startActivity(viewEventIntent);
@@ -246,10 +246,12 @@ public class PickDateActivity extends ToolbarActivity {
         newParseObject.put("EventId", eventId);
         newParseObject.put("UserName", creatorName);
         newParseObject.put("EventTitle", eventTitle);
+        newParseObject.put("StartTime", startTime);
+        newParseObject.put("EndTime", endTime);
         newParseObject.saveInBackground();
 
         //Add all the invitees Ids
-        for (int i=0; i<friendsIds.size(); i++) {
+        for (int i = 0; i < friendsIds.size(); i++) {
             newParseObject = new ParseObject("UserToEvent");
             newParseObject.put("UserFbId", friendsIds.get(i));
             newParseObject.put("EventId", eventId);
@@ -262,11 +264,12 @@ public class PickDateActivity extends ToolbarActivity {
     //Update friends' parse to notify them
     private void inviteFriends(ArrayList<String> friendsIds, String creatorName, String eventTitle) {
         ParseObject userObject;
+        ParseQuery<ParseObject> queryUser;
+        ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("User");
         for (String fbId : friendsIds) {
-            ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("User");
-            queryAll.whereEqualTo("FacebookID", fbId);
+            queryUser = queryAll.whereEqualTo("FacebookID", fbId);
             try {
-                userObject = queryAll.getFirst();
+                userObject = queryUser.getFirst();
                 userObject.put("Notification", true);
                 userObject.put("InviteFrom", creatorName);
                 userObject.put("InviteToTitle", eventTitle);
