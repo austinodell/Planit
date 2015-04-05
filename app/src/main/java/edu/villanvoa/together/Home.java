@@ -1,5 +1,7 @@
 package edu.villanvoa.together;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +22,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -76,6 +79,8 @@ public class Home extends ToolbarActivity {
                 mContext.startActivity(new Intent(mContext, AddFriends.class));
             }
         });
+
+        setAlarm();
     }
 
     //Add users events from the parse database
@@ -134,5 +139,29 @@ public class Home extends ToolbarActivity {
     private void addEvent(String id, String name) {
         Event event = new Event(id, name, R.drawable.picnic);
         eventsList.add(event);
+    }
+
+
+    public void setAlarm() {
+        //Log.d(TAG, "setAlarm");
+        //Set alarm to run MinuteReceiver every minute
+        //Check to see if alarm is already running
+        Context context = this;
+
+        boolean alarmUp = (PendingIntent.getBroadcast(context, 0,
+                new Intent(context, AlarmReceiver.class),
+                PendingIntent.FLAG_NO_CREATE) != null);
+        if (alarmUp) {
+            Log.d(TAG, "Alarm already set.");
+        } else {
+            Intent myIntent = new Intent(context, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
+
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            Calendar calendar = Calendar.getInstance();
+            long frequency = 60 * 1000; // in ms
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
+        }
     }
 }

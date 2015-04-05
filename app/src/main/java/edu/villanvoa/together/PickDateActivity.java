@@ -228,6 +228,7 @@ public class PickDateActivity extends ToolbarActivity {
         newParseObject.put("ImageType", eventImgLocal ? "local" : "remote");
         newParseObject.put("ImageURL", eventImgUrl);
         newParseObject.put("ImageResID", eventImgResource);
+        newParseObject.put("IdeaSelected", false);
 
         // saves it to parse.com
         try {

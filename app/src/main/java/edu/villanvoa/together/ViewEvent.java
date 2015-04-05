@@ -37,8 +37,8 @@ public class ViewEvent extends ToolbarActivity {
 
     private String TAG = "edu.villanvoa.together.ViewEvent";
 
-    private String eventObjectId, eventTitle, eventDetails, eventImgUrl, userFbId, eventDate;
-    private boolean eventImgLocal;
+    private String eventObjectId, eventTitle, eventDetails, eventImgUrl, userFbId, eventDate, creatorId;
+    private boolean eventImgLocal, ideaSelected;
     private int eventImgResource;
 
     private ImageLib imgLib;
@@ -89,27 +89,34 @@ public class ViewEvent extends ToolbarActivity {
         eventQuery.whereEqualTo("objectId", eventObjectId);
 
         Log.i(TAG, "EventObjectId = " + eventObjectId);
-
         try {
-            eventObject = eventQuery.find().get(0);
-            eventDetails = eventObject.getString("Details");
-            eventTitle = eventObject.getString("Title");
-            eventDate = eventObject.getString("Date");
-            setupToolbar(eventTitle);
-            eventImgLocal = eventObject.getString("ImageType").equals("local") ? true : false;
-            if (eventImgLocal) {
-                String temp_resid = eventObject.getString("ImageResID");
-                if (temp_resid != null && !temp_resid.equals("")) {
-                    eventImgResource = imgLib.getResId(temp_resid);
-                } else {
-                    eventImgResource = R.drawable.bowl;
+            if (eventQuery.find().size() > 0) {
+                try {
+                    eventObject = eventQuery.find().get(0);
+                    eventDetails = eventObject.getString("Details");
+                    eventTitle = eventObject.getString("Title");
+                    eventDate = eventObject.getString("Date");
+                    creatorId = eventObject.getString("CreatorId");
+                    ideaSelected = eventObject.getBoolean("IdeaSelected");
+                    setupToolbar(eventTitle);
+                    eventImgLocal = eventObject.getString("ImageType").equals("local") ? true : false;
+                    if (eventImgLocal) {
+                        String temp_resid = eventObject.getString("ImageResID");
+                        if (temp_resid != null && !temp_resid.equals("")) {
+                            eventImgResource = imgLib.getResId(temp_resid);
+                        } else {
+                            eventImgResource = R.drawable.bowl;
+                        }
+                    } else {
+                        eventImgUrl = eventObject.getString("ImageURL");
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.d(TAG, e.toString());
                 }
-            } else {
-                eventImgUrl = eventObject.getString("ImageURL");
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.d(TAG, e.toString());
         }
         userTimesList = getUserTimes();
 
@@ -164,6 +171,12 @@ public class ViewEvent extends ToolbarActivity {
                 Idea selectedIdea = ideasList.get(position);
                 ideaDiscussionIntent = new Intent(getApplicationContext(), IdeaDiscussion.class);
                 ideaDiscussionIntent.putExtra("ideaID", selectedIdea.getParseID());
+                ideaDiscussionIntent.putExtra("eventId", eventObjectId);
+                if (creatorId.equals(userFbId)) {
+                    ideaDiscussionIntent.putExtra("isCreator", true);
+                } else {
+                    ideaDiscussionIntent.putExtra("isCreator", false);
+                }
 
                 startActivity(ideaDiscussionIntent);
             }
@@ -181,6 +194,12 @@ public class ViewEvent extends ToolbarActivity {
         });
 
         Log.d(TAG, userTimesList.toString());
+
+        //If idea has been selected, remove the add button and the edit text
+        if (ideaSelected) {
+            addIdeaButton.setVisibility(View.INVISIBLE);
+
+        }
     }
 
     private void addFriendsFromParse(String eventObjectId) {
@@ -261,8 +280,7 @@ public class ViewEvent extends ToolbarActivity {
                         pickTimeIntent.putExtra("EventDate", eventDate);
                         startActivityForResult(pickTimeIntent, 0);
                     }
-                }
-                else{
+                } else {
                     userTimesList.add(new TimeAvailable(parseObject.getString("UserFbId"), parseObject.getString("StartTime"), parseObject.getString("EndTime")));
                 }
             }

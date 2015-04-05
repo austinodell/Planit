@@ -34,7 +34,7 @@ public class IdeaDiscussion extends ToolbarActivity {
     private static final String TAG = "Debugging";
 
     private TextView locationTV, descriptionTV, votesTV;
-    private Button plusButton;
+    private Button plusButton, pickIdeaButton;
     private ToggleButton upvoteButton, downvoteButton;
     private EditText commentET;
     private ListView commentsLV;
@@ -49,9 +49,10 @@ public class IdeaDiscussion extends ToolbarActivity {
     private ParseQuery<ParseObject> userVoteQuery;
     private SimpleDateFormat dateTimeStamp;
 
-    private String userFbId, userName, commentTimeStamp;
+    private String userFbId, userName, commentTimeStamp, eventId;
     private String ideaTitle, ideaLoc, ideaDesc, ideaObjectID;
     private int ideaVotes;
+    private boolean isCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class IdeaDiscussion extends ToolbarActivity {
         plusButton = (Button) findViewById(R.id.addCommentButton);
         upvoteButton = (ToggleButton) findViewById(R.id.upvote_button);
         downvoteButton = (ToggleButton) findViewById(R.id.downvote_button);
+        pickIdeaButton = (Button) findViewById(R.id.pickIdeaButton);
 
         Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
@@ -96,17 +98,14 @@ public class IdeaDiscussion extends ToolbarActivity {
                                     userVoteObject = new ParseObject("UserVotes");
                                     userVoteObject.put("UserFbId", userFbId);
                                     userVoteObject.put("IdeaId", ideaObjectID);
-                                }
-                                else {
+                                } else {
                                     if (userVoteObject.getBoolean("UpVoted")) {
                                         upvoteButton.setChecked(true);
-                                    }
-                                    else if(userVoteObject.getBoolean("DownVoted")) {
+                                    } else if (userVoteObject.getBoolean("DownVoted")) {
                                         downvoteButton.setChecked(true);
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 Log.d(TAG, "UserFbIs is null");
                             }
                         }
@@ -118,7 +117,12 @@ public class IdeaDiscussion extends ToolbarActivity {
 
         //Get calling intent information
         callingIntent = getIntent();
-
+        isCreator = callingIntent.getBooleanExtra("isCreator", false);
+        //if the user is the creator, allow them to select idea
+        if (isCreator) {
+            pickIdeaButton.setVisibility(View.VISIBLE);
+        }
+        eventId = callingIntent.getStringExtra("eventId");
         //Get the selected idea's information
         ideaObjectID = callingIntent.getStringExtra("ideaID");
         ParseQuery eventQuery = ParseQuery.getQuery("Idea");
@@ -143,7 +147,6 @@ public class IdeaDiscussion extends ToolbarActivity {
         locationTV.setText(ideaLoc);
         descriptionTV.setText(ideaDesc);
         votesTV.setText(Integer.toString(ideaVotes));
-
 
 
         //Set the state of the upvote/downvote buttons <--Need Parse Data
@@ -291,8 +294,7 @@ public class IdeaDiscussion extends ToolbarActivity {
                 }
                 if (ideaObject != null) {
                     ideaObject.put("Upvotes", ideaObject.getInt("Upvotes") + 1);
-                }
-                else {
+                } else {
                     Log.d(TAG, "idea object null");
                 }
                 updateVoteView();
@@ -360,6 +362,53 @@ public class IdeaDiscussion extends ToolbarActivity {
             ideaVotes = ideaObject.getInt("Upvotes") - ideaObject.getInt("Downvotes");
             votesTV.setText(Integer.toString(ideaVotes));
         }
+    }
+
+    public void onPickIdeaClicked(View v) {
+
+        //Delete all other ideas from Parse
+        List<ParseObject> parseObjects;
+        ParseObject parseObject;
+        ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("Idea");
+        queryAll.whereEqualTo("EventId", eventId);
+        try {
+            parseObjects = queryAll.find();
+            for (int i = 0; i < parseObjects.size(); i++) {
+                parseObject = parseObjects.get(i);
+                Log.d(TAG, parseObject.getString("Title"));
+                if (parseObject.getObjectId() != null) {
+                    Log.d(TAG, parseObject.getObjectId());
+                    if (!parseObject.getObjectId().equals(ideaObjectID)) {
+                        Log.d(TAG, parseObject.get("Title") + " deleted");
+                        parseObject.delete();
+                    }
+                } else {
+                    Log.d(TAG, "objectId is null");
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d(TAG, e.toString());
+        }
+
+        //Set IdeaSelected to true for the event
+        queryAll = ParseQuery.getQuery("Event");
+        queryAll.whereEqualTo("objectId", eventId);
+        try {
+            parseObject = queryAll.getFirst();
+            parseObject.put("IdeaSelected", true);
+            parseObject.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d(TAG, e.toString());
+        }
+
+        //Return to event screen
+        Intent eventIntent;
+        eventIntent = new Intent(this, ViewEvent.class);
+        eventIntent.putExtra("EventObjectId", eventId);
+        eventIntent.setFlags(eventIntent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(eventIntent);
     }
 
 }
