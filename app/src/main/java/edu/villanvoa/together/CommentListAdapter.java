@@ -26,6 +26,11 @@ public class CommentListAdapter extends BaseAdapter {
         commentList = list;
     }
 
+    public void addItems(ArrayList<Comment> updatedList){
+
+        commentList.clear();
+        commentList.addAll(updatedList);
+    }
     @Override
     public int getCount() {
         return commentList.size();
