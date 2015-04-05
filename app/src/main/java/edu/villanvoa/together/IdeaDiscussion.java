@@ -248,6 +248,7 @@ public class IdeaDiscussion extends ToolbarActivity {
         String comment, creatorName, creatorId, commentTimeStamp;
         ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("Comment");
         queryAll.whereEqualTo("IdeaId", ideaObjectID);
+        queryAll.orderByAscending("createdAt");
         try {
             parseObjects = queryAll.find();
             for (int i = 0; i < parseObjects.size(); i++) {
