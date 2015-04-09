@@ -78,6 +78,10 @@
             android:name=".PickTimeActivity"
             android:label="@string/title_activity_pick_time" >
         </activity>
+        <activity
+            android:name=".FriendStatusActivity"
+            android:label="@string/title_activity_friend_status" >
+        </activity>
     </application>
 
 </manifest>

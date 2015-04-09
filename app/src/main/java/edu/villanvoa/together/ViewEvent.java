@@ -38,6 +38,7 @@ public class ViewEvent extends ToolbarActivity {
     private String TAG = "edu.villanvoa.together.ViewEvent";
 
     private String eventObjectId, eventTitle, eventDetails, eventImgUrl, userFbId, eventDate, creatorId;
+    private ArrayList<String> friendsNames, friendsIds;
     private boolean eventImgLocal, ideaSelected;
     private int eventImgResource;
 
@@ -74,6 +75,8 @@ public class ViewEvent extends ToolbarActivity {
         Log.i(TAG, "Started ViewEvent");
         Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
+        friendsIds = new ArrayList<String>();
+        friendsNames = new ArrayList<String>();
 
         imgLib = new ImageLib(this);
 
@@ -158,6 +161,15 @@ public class ViewEvent extends ToolbarActivity {
 
         friendsGridAdapter = new FriendsGridAdapter(this, friendsList, eventFriendsGV, imgLib);
         eventFriendsGV.setAdapter(friendsGridAdapter);
+        eventFriendsGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent friendStatusIntent = new Intent(getApplicationContext(), FriendStatusActivity.class);
+                friendStatusIntent.putExtra("friendsIds", friendsIds);
+                friendStatusIntent.putExtra("friendsNames", friendsNames);
+                startActivity(friendStatusIntent);
+            }
+        });
 
         ideasList = new ArrayList<Idea>();
         addIdeasFromParse(eventObjectId);
@@ -211,6 +223,8 @@ public class ViewEvent extends ToolbarActivity {
             parseObjects = userToEventQuery.find();
             for (int i = 0; i < parseObjects.size(); i++) {
                 parseObject = parseObjects.get(i);
+                friendsIds.add(parseObject.getString("UserFbId"));
+                friendsNames.add(parseObject.getString("UserName"));
                 addFriendToGrid(parseObject.getString("UserFbId"), parseObject.getString("UserName"), true);
             }
         } catch (ParseException e) {

@@ -274,6 +274,7 @@ public class PickDateActivity extends ToolbarActivity {
                 userObject.put("Notification", true);
                 userObject.put("InviteFrom", creatorName);
                 userObject.put("InviteToTitle", eventTitle);
+                userObject.put("InviteToId", objectId);
                 userObject.save();
             } catch (ParseException e) {
                 e.printStackTrace();

@@ -40,4 +40,5 @@
         <item>Smores</item>
     </string-array>
     <string name="title_activity_pick_time">PickTimeActivity</string>
+    <string name="title_activity_friend_status">FriendStatusActivity</string>
 </resources>
