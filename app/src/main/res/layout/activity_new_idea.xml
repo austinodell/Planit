@@ -124,6 +124,7 @@
         android:textSize="26sp"
         android:textColor="@android:color/white"
         android:id="@+id/submitButton"
+        android:onClick="submitClicked"
         android:background="@drawable/fab"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
