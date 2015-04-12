@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -78,5 +76,12 @@ public class IdeaListAdapter extends BaseAdapter {
         rank.setText(Integer.toString(vote));
 
         return v;
+    }
+
+    public void addItems(ArrayList<Idea> updatedList){
+
+        mIdeaList.clear();
+        mIdeaList.addAll(updatedList);
+
     }
 }

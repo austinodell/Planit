@@ -26,12 +26,17 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/ski" />
 
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipeIdeaContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_event_img">
+
                 <ScrollView
                     android:id="@+id/view_event_scrollview"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:layout_marginTop="-50dp"
-                    android:layout_below="@+id/view_event_img">
+                    android:layout_marginTop="-50dp">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -171,6 +176,9 @@
 
                 </ScrollView>
 
+                </android.support.v4.widget.SwipeRefreshLayout>
+
             </RelativeLayout>
+
 
 </LinearLayout>

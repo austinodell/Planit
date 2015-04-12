@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +51,7 @@ public class ViewEvent extends ToolbarActivity {
     private FullGridView eventFriendsGV;
     private FullGridView eventIdeasTable;
     private Button addIdeaButton;
+    private SwipeRefreshLayout ideaRefreshLayout;
 
     private ArrayList<Friend> friendsList;
     private FriendsGridAdapter friendsGridAdapter;
@@ -141,6 +143,34 @@ public class ViewEvent extends ToolbarActivity {
         eventTime = (TextView) findViewById(R.id.view_event_time);
         eventFriendsGV = (FullGridView) findViewById(R.id.view_event_friends_container);
         eventIdeasTable = (FullGridView) findViewById(R.id.view_event_ideas_container);
+
+        ideaRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeIdeaContainer);
+        ideaRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d("Scroll Container", "Refreshing");
+
+                //Populate ideasList with all the Event's ideas from parse
+                ideasList = new ArrayList<Idea>();
+                addIdeasFromParse(eventObjectId);
+
+                //Replace the adapaters current list with the new updated list
+                ideaListAdapter.addItems(ideasList);
+
+                //Request the adapter update its view
+                ideaListAdapter.notifyDataSetChanged();
+
+                // Stop the refresh once you have the data
+               ideaRefreshLayout.setRefreshing(false);
+
+            }
+        });
+
+        //Set the refresh circle color cycle
+        ideaRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         //EventPictureSelector pictureSelector = new EventPictureSelector();
         //eventImg.setImageResource(pictureSelector.getImgResource());
@@ -322,4 +352,5 @@ public class ViewEvent extends ToolbarActivity {
             Log.d(TAG, userTimesList.toString());
         }
     }
+
 }
