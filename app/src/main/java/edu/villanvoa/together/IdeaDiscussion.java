@@ -1,9 +1,14 @@
 package edu.villanvoa.together;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +42,8 @@ public class IdeaDiscussion extends ToolbarActivity {
     private ListView commentsLV;
     private SwipeRefreshLayout commentLVContainer;
 
+    private ToolbarActivity toolbar;
+
     private Intent callingIntent;
     private ArrayList<Comment> commentsList;
     private CommentListAdapter adapter;
@@ -46,7 +53,7 @@ public class IdeaDiscussion extends ToolbarActivity {
     private ParseQuery<ParseObject> userVoteQuery;
     private SimpleDateFormat dateTimeStamp;
 
-    private String userFbId, userName, commentTimeStamp, eventId;
+    private String userFbId, userName, commentTimeStamp, eventId, mapsURI;
     private String ideaTitle, ideaLoc, ideaDesc, ideaObjectID;
     private int ideaVotes;
     private boolean isCreator;
@@ -56,11 +63,16 @@ public class IdeaDiscussion extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_idea_discussion);
 
+<<<<<<< HEAD
+        toolbar = new ToolbarActivity();
+=======
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+>>>>>>> origin/dev
+
         //Set up the buttons
         plusButton = (Button) findViewById(R.id.addCommentButton);
         upvoteButton = (ToggleButton) findViewById(R.id.upvote_button);
         downvoteButton = (ToggleButton) findViewById(R.id.downvote_button);
-        pickIdeaButton = (Button) findViewById(R.id.pickIdeaButton);
 
         Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
@@ -115,10 +127,7 @@ public class IdeaDiscussion extends ToolbarActivity {
         //Get calling intent information
         callingIntent = getIntent();
         isCreator = callingIntent.getBooleanExtra("isCreator", false);
-        //if the user is the creator, allow them to select idea
-        if (isCreator) {
-            pickIdeaButton.setVisibility(View.VISIBLE);
-        }
+
         eventId = callingIntent.getStringExtra("eventId");
         //Get the selected idea's information
         ideaObjectID = callingIntent.getStringExtra("ideaID");
@@ -200,6 +209,26 @@ public class IdeaDiscussion extends ToolbarActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (isCreator) {
+            MenuInflater menuInflater = getMenuInflater();
+            menuInflater.inflate(R.menu.menu_idea_discussion, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_pick_idea:
+                onPickIdeaClicked();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public void addNewCommentClicked(View view) {
 
@@ -240,6 +269,25 @@ public class IdeaDiscussion extends ToolbarActivity {
         }
     }
 
+    public void locationClicked(View view){
+
+        StringBuilder reformatedLoc = new StringBuilder();
+        String[] loc = ideaLoc.split("&");
+
+        for(int index = 0; index < loc.length; index++){
+
+            if(index!=0) {
+                reformatedLoc.append("%26");
+            }
+            reformatedLoc.append(loc[index]);
+
+        }
+
+        mapsURI = "http://maps.google.co.in/maps?q=" + reformatedLoc.toString();
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(mapsURI));
+        startActivity(i);
+
+    }
 
     //Function to retrieve comments from parse
     private ArrayList<Comment> getParseComments() {
@@ -365,7 +413,7 @@ public class IdeaDiscussion extends ToolbarActivity {
         }
     }
 
-    public void onPickIdeaClicked(View v) {
+    public void onPickIdeaClicked() {
 
         //Delete all other ideas from Parse
         List<ParseObject> parseObjects;

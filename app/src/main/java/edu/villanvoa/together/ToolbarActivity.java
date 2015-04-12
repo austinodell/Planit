@@ -9,9 +9,11 @@ import android.support.v7.widget.Toolbar;
  * Created by aodell on 3/16/15.
  */
 public class ToolbarActivity extends ActionBarActivity {
+    private Toolbar toolbar;
+
     protected void setupToolbar(int toolbarTitle) {
         /* Set up toolbar to replace Actionbar */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(toolbarTitle);
         setSupportActionBar(toolbar);
         ActionBar mSupportActionBar = getSupportActionBar();
@@ -21,11 +23,15 @@ public class ToolbarActivity extends ActionBarActivity {
 
     protected void setupToolbar(String toolbarTitle) {
         /* Set up toolbar to replace Actionbar */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(toolbarTitle);
         setSupportActionBar(toolbar);
         ActionBar mSupportActionBar = getSupportActionBar();
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    public Toolbar getToolbar() {
+        return this.toolbar;
     }
 }
