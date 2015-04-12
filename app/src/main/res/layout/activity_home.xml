@@ -12,32 +12,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeEventContainer"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <GridView
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:verticalSpacing="0dp"
-            android:horizontalSpacing="0dp"
-            android:stretchMode="columnWidth"
-            android:numColumns="2"/>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
-        <Button
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:text="+"
-            android:textSize="26sp"
-            android:textColor="@android:color/white"
-            android:id="@+id/new_event_btn"
-            android:background="@drawable/fab"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="24dp"
-            android:layout_marginRight="24dp"/>
+            <GridView
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:verticalSpacing="0dp"
+                android:horizontalSpacing="0dp"
+                android:stretchMode="columnWidth"
+                android:numColumns="2"/>
 
-    </RelativeLayout>
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:textSize="26sp"
+                android:textColor="@android:color/white"
+                android:id="@+id/new_event_btn"
+                android:background="@drawable/fab"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="24dp"
+                android:layout_marginRight="24dp"/>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>

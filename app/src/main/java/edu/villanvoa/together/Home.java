@@ -5,20 +5,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Point;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.location.ActivityRecognitionApi;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -38,11 +33,14 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
 
     private ArrayList<Event> eventsList;
     private Context mContext;
+    private SwipeRefreshLayout swipeEventLayout;
 
     private String userFbId;
     private Intent viewEventIntent;
 
     private ImageLib imgLib;
+
+    private HomeGridAdapter eventAdapter;
 
     private int event_id = 0; // temporary - to be populated by Parse
 
@@ -83,7 +81,8 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
 
         // Setup Adapter
         GridView gridView = (GridView) findViewById(R.id.container);
-        gridView.setAdapter(new HomeGridAdapter(this, eventsList, imgLib));
+        eventAdapter = new HomeGridAdapter(this, eventsList, imgLib);
+        gridView.setAdapter(eventAdapter);
 
         // Add New Event Button Setup
         Button new_event_btn = (Button) findViewById(R.id.new_event_btn);
@@ -95,7 +94,33 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
         });
 
         setAlarm();
-        //requestActivityUpdates();
+
+        swipeEventLayout = (SwipeRefreshLayout) findViewById(R.id.swipeEventContainer);
+        swipeEventLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d("Scroll Container", "Refreshing");
+
+                // Used to store all events to pass to HomeGridAdapter
+                eventsList = new ArrayList<Event>();
+
+                // Populate Events List
+                addEventsFromParse(userFbId);
+                eventAdapter.addItems(eventsList);
+
+                eventAdapter.notifyDataSetChanged();
+                // Stop the refresh once you have the data
+                swipeEventLayout.setRefreshing(false);
+
+            }
+        });
+
+        //Set the refresh circle color cycle
+        swipeEventLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
     }
 
     //Add users events from the parse database

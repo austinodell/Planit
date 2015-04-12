@@ -44,6 +44,12 @@ public class HomeGridAdapter extends BaseAdapter {
         return 0;
     }
 
+    public void addItems(ArrayList<Event> updatedList){
+
+        mEvent.clear();
+        mEvent.addAll(updatedList);
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = view;
