@@ -20,4 +20,28 @@ public class TimeAvailable {
                 ", userFbId='" + userFbId + '\'' +
                 '}';
     }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getUserFbId() {
+        return userFbId;
+    }
+
+    public void setUserFbId(String userFbId) {
+        this.userFbId = userFbId;
+    }
 }

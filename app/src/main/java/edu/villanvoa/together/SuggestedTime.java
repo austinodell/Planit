@@ -1,7 +1,12 @@
 package edu.villanvoa.together;
 
-import android.text.format.Time;
+import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,10 +21,28 @@ public class SuggestedTime {
     }
 
     private String suggestedStartTime(List<TimeAvailable> userAvailableTimes) {
-        List<Time> userStartTimes;
+        ArrayList<Date> userStartTimes = new ArrayList<>();
         for (TimeAvailable timeAvailable : userAvailableTimes) {
-
+            try {
+                userStartTimes.add(new SimpleDateFormat("HH:mm").parse(timeAvailable.getStartTime()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
+        Collections.sort(userStartTimes);
+
         return null;
+    }
+
+    private ArrayList<Date> timeSort(ArrayList<Date> userTimes) {
+        ArrayList<Date> sortedTimes = new ArrayList<>();
+        Date first;
+        for (Date date : userTimes) {
+            for (int i=0; i<sortedTimes.size(); i++) {
+                if (date.before(sortedTimes.get(i))) {
+                }
+            }
+        }
+        return userTimes;
     }
 }
