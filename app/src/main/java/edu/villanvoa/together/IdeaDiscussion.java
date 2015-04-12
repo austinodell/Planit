@@ -145,8 +145,19 @@ public class IdeaDiscussion extends ToolbarActivity {
         votesTV = (TextView) findViewById(R.id.idea_votes_tv);
 
         //Set the idea information text views
-        locationTV.setText(ideaLoc);
-        descriptionTV.setText(ideaDesc);
+        if(ideaLoc.equals("")) {
+            locationTV.setVisibility(View.INVISIBLE);
+            locationTV.setHeight(0);
+        } else {
+            locationTV.setText(ideaLoc);
+        }
+
+        if(ideaDesc.equals("")) {
+            descriptionTV.setVisibility(View.INVISIBLE);
+            descriptionTV.setHeight(0);
+        } else {
+            descriptionTV.setText(ideaDesc);
+        }
         votesTV.setText(Integer.toString(ideaVotes));
 
 
