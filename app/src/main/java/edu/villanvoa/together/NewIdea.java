@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -81,36 +82,51 @@ public class NewIdea extends ActionBarActivity {
         sharedPreferences = this.getSharedPreferences("UserDetails", MainActivity.MODE_PRIVATE);
         String userId = sharedPreferences.getString("UserFbId", null);
 
-        //Create new intent to bring idea data back to event screen
-        returnIdea = new Intent(this, ViewEvent.class);
+        String ideaTitle, ideaLoc, ideaDesc;
+        ideaTitle = titleET.getText().toString();
+        ideaLoc = locACV.getText().toString();
+        ideaDesc = descriptionET.getText().toString();
 
-        //Store Idea data inside the intent
-//        returnIdea.putExtra("ideaTitle", titleET.getText().toString());
-//        returnIdea.putExtra("ideaLoc", locACV.getText().toString());
-//        returnIdea.putExtra("ideaDescription", descriptionET.getText().toString());
-        returnIdea.putExtra("EventObjectId", eventObjectId);
-
-        //Save the idea to parse
-        ideaObject = new ParseObject("Idea");
-        ideaObject.put("Title", titleET.getText().toString());
-        ideaObject.put("Location", locACV.getText().toString());
-        ideaObject.put("Details", descriptionET.getText().toString());
-        ideaObject.put("EventId", eventObjectId);
-        ideaObject.put("Upvotes", 0);
-        ideaObject.put("Downvotes", 0);
-        if (userId != null) {
-            ideaObject.put("CreatorId", userId);
+        if(ideaTitle.contentEquals("")){
+            Toast.makeText(getApplicationContext(), "Empty Idea", Toast.LENGTH_SHORT).show();
         }
+        else if((ideaLoc).contentEquals("")){
+            Toast.makeText(getApplicationContext(), "Enter Location", Toast.LENGTH_SHORT).show();
 
-        // saves it to parse.com
-        try {
-            ideaObject.save();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
+        else {
+
+            //Create new intent to bring idea data back to event screen
+            returnIdea = new Intent(this, ViewEvent.class);
+
+            //Store Idea data inside the intent
+            //        returnIdea.putExtra("ideaTitle", titleET.getText().toString());
+            //        returnIdea.putExtra("ideaLoc", locACV.getText().toString());
+            //        returnIdea.putExtra("ideaDescription", descriptionET.getText().toString());
+            returnIdea.putExtra("EventObjectId", eventObjectId);
+
+            //Save the idea to parse
+            ideaObject = new ParseObject("Idea");
+            ideaObject.put("Title", ideaTitle);
+            ideaObject.put("Location", ideaLoc);
+            ideaObject.put("Details", ideaDesc);
+            ideaObject.put("EventId", eventObjectId);
+            ideaObject.put("Upvotes", 0);
+            ideaObject.put("Downvotes", 0);
+            if (userId != null) {
+                ideaObject.put("CreatorId", userId);
+            }
+
+            // saves it to parse.com
+            try {
+                ideaObject.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
 
-        //Launch the intent
-        startActivity(returnIdea);
+            //Launch the intent
+            startActivity(returnIdea);
+        }
     }
 }
