@@ -46,7 +46,7 @@ public class FriendStatusAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         TextView friendName, friendStatusTV;
-        final ImageView picture;
+        final SquareImage picture;
 
 
         if (v == null) {
@@ -59,14 +59,14 @@ public class FriendStatusAdapter extends BaseAdapter {
 
         friendName = (TextView) v.getTag(R.id.friend_status_friendName);
         friendStatusTV = (TextView) v.getTag(R.id.friend_status_friendStatus);
-        picture = (ImageView) v.getTag(R.id.friend_status_imageView);
+        picture = (SquareImage) v.getTag(R.id.friend_status_imageView);
 
         FriendStatus friendStatus;
         friendStatus = getItem(position);
 
         if (friendStatus != null) {
             if (friendName != null && friendStatus.getFriendName() != null) {
-                friendName.setText(friendStatus.getFriendName() + ":");
+                friendName.setText(friendStatus.getFriendName() + ": ");
             }
             if (friendStatusTV!= null && friendStatus.getFriendStatus() != null) {
                 friendStatusTV.setText(friendStatus.getFriendStatus());

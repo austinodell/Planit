@@ -9,10 +9,11 @@
     >
 
 
-    <ImageView
+    <edu.villanvoa.together.SquareImage
         android:id="@+id/friend_status_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
         android:gravity="left"/>
 
     <TextView
