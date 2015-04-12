@@ -63,16 +63,6 @@ public class IdeaDiscussion extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_idea_discussion);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        toolbar = new ToolbarActivity();
-=======
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
->>>>>>> origin/dev
-=======
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
->>>>>>> origin/dev
-
         //Set up the buttons
         plusButton = (Button) findViewById(R.id.addCommentButton);
         upvoteButton = (ToggleButton) findViewById(R.id.upvote_button);
