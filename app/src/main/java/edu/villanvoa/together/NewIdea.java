@@ -1,6 +1,7 @@
 package edu.villanvoa.together;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -76,6 +77,10 @@ public class NewIdea extends ActionBarActivity {
 
     public void submitClicked(View view) {
 
+        SharedPreferences sharedPreferences;
+        sharedPreferences = this.getSharedPreferences("UserDetails", MainActivity.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("UserFbId", null);
+
         //Create new intent to bring idea data back to event screen
         returnIdea = new Intent(this, ViewEvent.class);
 
@@ -93,6 +98,9 @@ public class NewIdea extends ActionBarActivity {
         ideaObject.put("EventId", eventObjectId);
         ideaObject.put("Upvotes", 0);
         ideaObject.put("Downvotes", 0);
+        if (userId != null) {
+            ideaObject.put("CreatorId", userId);
+        }
 
         // saves it to parse.com
         try {
