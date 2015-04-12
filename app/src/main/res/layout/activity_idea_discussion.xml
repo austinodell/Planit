@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:hint="Location"
+                android:onClick="locationClicked"
                 android:padding="5dp"/>
 
             <TextView
