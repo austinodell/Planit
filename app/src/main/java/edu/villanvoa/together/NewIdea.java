@@ -91,7 +91,7 @@ public class NewIdea extends ActionBarActivity {
         ideaObject.put("Location", locACV.getText().toString());
         ideaObject.put("Details", descriptionET.getText().toString());
         ideaObject.put("EventId", eventObjectId);
-        ideaObject.put("Upvotes", 1);
+        ideaObject.put("Upvotes", 0);
         ideaObject.put("Downvotes", 0);
 
         // saves it to parse.com

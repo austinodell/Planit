@@ -122,6 +122,7 @@ public class IdeaDiscussion extends ToolbarActivity {
         eventId = callingIntent.getStringExtra("eventId");
         //Get the selected idea's information
         ideaObjectID = callingIntent.getStringExtra("ideaID");
+
         ParseQuery eventQuery = ParseQuery.getQuery("Idea");
         eventQuery.whereEqualTo("objectId", ideaObjectID);
         try {
@@ -404,6 +405,17 @@ public class IdeaDiscussion extends ToolbarActivity {
         }
 
         //Return to event screen
+        Intent eventIntent;
+        eventIntent = new Intent(this, ViewEvent.class);
+        eventIntent.putExtra("EventObjectId", eventId);
+        eventIntent.setFlags(eventIntent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(eventIntent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // set idea object vote count here (to do)
+        super.onBackPressed();
         Intent eventIntent;
         eventIntent = new Intent(this, ViewEvent.class);
         eventIntent.putExtra("EventObjectId", eventId);

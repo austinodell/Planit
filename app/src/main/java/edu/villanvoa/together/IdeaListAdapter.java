@@ -7,6 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +20,14 @@ import java.util.List;
 public class IdeaListAdapter extends BaseAdapter {
     private List<Idea> mIdeaList;
     private final LayoutInflater mInflater;
+    private final Context mContext;
+    private ParseObject ideaObject;
 
     public IdeaListAdapter(Context context, ArrayList<Idea> list) {
         mInflater = LayoutInflater.from(context);
         mIdeaList = list;
+        mContext = context;
+        Parse.initialize(context, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
     }
 
     @Override
@@ -52,7 +62,20 @@ public class IdeaListAdapter extends BaseAdapter {
         Idea idea = getItem(i);
 
         name.setText(idea.getName());
-        rank.setText("+" + idea.getId());
+
+        ParseQuery eventQuery = ParseQuery.getQuery("Idea");
+        eventQuery.whereEqualTo("objectId", idea.getParseID());
+
+        int vote = 0;
+
+        try {
+            ideaObject = eventQuery.getFirst();
+            vote = ideaObject.getInt("Upvotes") - ideaObject.getInt("Downvotes");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        rank.setText(Integer.toString(vote));
 
         return v;
     }
