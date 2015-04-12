@@ -64,7 +64,11 @@ public class IdeaDiscussion extends ToolbarActivity {
         setContentView(R.layout.activity_idea_discussion);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         toolbar = new ToolbarActivity();
+=======
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+>>>>>>> origin/dev
 =======
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 >>>>>>> origin/dev
