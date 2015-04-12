@@ -124,6 +124,9 @@ public class ViewEvent extends ToolbarActivity {
             e.printStackTrace();
         }
         userTimesList = getUserTimes();
+        SuggestedTime suggestedTime = new SuggestedTime(userTimesList);
+        Log.d(TAG, "Suggested startTime: " + suggestedTime.getStartTime());
+        Log.d(TAG, "Suggested endTime: " + suggestedTime.getEndTime());
 
         ImageLib imgLib = new ImageLib(this);
 
@@ -187,7 +190,7 @@ public class ViewEvent extends ToolbarActivity {
         }
 
         eventDesc.setText(eventDetails);
-        eventTime.setText("Time: 9:00pm - 1:00am");
+        eventTime.setText("Time: " + suggestedTime.toString());
 
         friendsGridAdapter = new FriendsGridAdapter(this, friendsList, eventFriendsGV, imgLib);
         eventFriendsGV.setAdapter(friendsGridAdapter);
