@@ -9,6 +9,10 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import junit.framework.Test;
 
 import java.util.ArrayList;
@@ -42,8 +46,16 @@ public class FriendStatusActivity extends ActionBarActivity {
         Intent callingIntent = getIntent();
         friendsNames = callingIntent.getStringArrayListExtra("friendsNames");
         friendsIds = callingIntent.getStringArrayListExtra("friendsIds");
+        ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("User");
+        ParseObject parseObject;
         for (int i=0; i < friendsNames.size(); i++) {
-            friendStatusList.add(new FriendStatus(friendsNames.get(i), "Test", friendsIds.get(i)));
+            try {
+                parseObject = queryAll.whereEqualTo("FacebookID", friendsIds.get(i)).getFirst();
+                friendStatusList.add(new FriendStatus(friendsNames.get(i), parseObject.getString("UserStatus"), friendsIds.get(i)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.d(TAG, e.toString());
+            }
             Log.d(TAG, "Friend: " + friendsNames.get(i));
         }
         return friendStatusList;

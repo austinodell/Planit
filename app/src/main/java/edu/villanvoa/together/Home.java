@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionApi;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -26,9 +29,12 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class Home extends ToolbarActivity {
+public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionCallbacks {
 
     private static final String TAG = "Debugging";
+
+    GoogleApiClient apiClient;
+    private PendingIntent mActivityRecognitionPendingIntent;
 
     private ArrayList<Event> eventsList;
     private Context mContext;
@@ -44,6 +50,14 @@ public class Home extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        apiClient = null;
+        apiClient = new GoogleApiClient.Builder(this)
+                .addApi(ActivityRecognition.API)
+                .addConnectionCallbacks(this)
+                .build();
+        apiClient.connect();
+        mActivityRecognitionPendingIntent = null;
 
         Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
 
@@ -81,6 +95,7 @@ public class Home extends ToolbarActivity {
         });
 
         setAlarm();
+        //requestActivityUpdates();
     }
 
     //Add users events from the parse database
@@ -93,19 +108,19 @@ public class Home extends ToolbarActivity {
             queryAll.whereEqualTo("UserFbId", userFbId);
             try {
                 parseObjects = queryAll.find();
-                Log.i(TAG,"query # events = " + parseObjects.size());
+                Log.i(TAG, "query # events = " + parseObjects.size());
                 for (int i = 0; i < parseObjects.size(); i++) {
                     parseObject = parseObjects.get(i);
                     ParseQuery<ParseObject> eventQuery = ParseQuery.getQuery("Event");
-                    eventQuery.whereEqualTo("objectId",parseObject.getString("EventId"));
+                    eventQuery.whereEqualTo("objectId", parseObject.getString("EventId"));
                     eventObject = eventQuery.find().get(0);
 
                     String imgLocalString = eventObject.getString("ImageType");
-                    if(imgLocalString == null) {
+                    if (imgLocalString == null) {
                         imgLocalString = "local";
                     }
-                    if(imgLocalString.equals("local")) {
-                        if(eventObject.getString("ImageResID") != null && !eventObject.getString("ImageResID").equals("")) {
+                    if (imgLocalString.equals("local")) {
+                        if (eventObject.getString("ImageResID") != null && !eventObject.getString("ImageResID").equals("")) {
                             addEvent(parseObject.getString("EventId"), eventObject.getString("Title"), true, eventObject.getString("ImageResID"));
                         } else {
                             addEvent(parseObject.getString("EventId"), eventObject.getString("Title"));
@@ -126,7 +141,7 @@ public class Home extends ToolbarActivity {
     // Add event with Image Drawable Resource (preloaded) or URL (downloaded)
     private void addEvent(String id, String name, boolean imgLocal, String img) {
         Event event;
-        if(imgLocal) {
+        if (imgLocal) {
             int res_id = imgLib.getResId(img);
             event = new Event(id, name, res_id);
         } else {
@@ -163,5 +178,108 @@ public class Home extends ToolbarActivity {
             long frequency = 60 * 1000; // in ms
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
         }
+    }
+
+    public void requestActivityUpdates() {
+        /*
+         * Request updates, using the default detection interval.
+         * The PendingIntent sends updates to ActivityRecognitionIntentService
+         */
+//        getActivityRecognitionClient().requestActivityUpdates(
+//                60000,
+//                createRequestPendingIntent());
+        if (apiClient.isConnected()) {
+            Log.d(TAG, "Requesting activity updates");
+            ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(getActivityRecognitionClient(), 60000, createRequestPendingIntent());
+            // Disconnect the client
+        }
+        else {
+            Log.d(TAG, "Not connected");
+        }
+        requestDisconnection();
+    }
+
+    /**
+     * Get the current activity recognition client, or create a new one if necessary.
+     * This method facilitates multiple requests for a client, even if a previous
+     * request wasn't finished. Since only one client object exists while a connection
+     * is underway, no memory leaks occur.
+     *
+     * @return An ActivityRecognitionClient object
+     */
+    private GoogleApiClient getActivityRecognitionClient() {
+        if (apiClient == null) {
+
+//            apiClient = new GoogleApiClient.Builder(this)
+//                    .addApi(ActivityRecognition.API)
+//                    .build();
+//            apiClient.connect();
+        }
+        return apiClient;
+    }
+
+    private PendingIntent createRequestPendingIntent() {
+
+        // If the PendingIntent already exists
+        if (null != getRequestPendingIntent()) {
+
+            // Return the existing intent
+            return mActivityRecognitionPendingIntent;
+
+            // If no PendingIntent exists
+        } else {
+            // Create an Intent pointing to the IntentService
+            Intent intent = new Intent(mContext, ActivityRecognitionIntentService.class);
+
+            /*
+             * Return a PendingIntent to start the IntentService.
+             * Always create a PendingIntent sent to Location Services
+             * with FLAG_UPDATE_CURRENT, so that sending the PendingIntent
+             * again updates the original. Otherwise, Location Services
+             * can't match the PendingIntent to requests made with it.
+             */
+            PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            setRequestPendingIntent(pendingIntent);
+            return pendingIntent;
+        }
+
+    }
+
+    /**
+     * Returns the current PendingIntent to the caller.
+     *
+     * @return The PendingIntent used to request activity recognition updates
+     */
+    public PendingIntent getRequestPendingIntent() {
+        return mActivityRecognitionPendingIntent;
+    }
+
+    /**
+     * Sets the PendingIntent used to make activity recognition update requests
+     *
+     * @param intent The PendingIntent
+     */
+    public void setRequestPendingIntent(PendingIntent intent) {
+        mActivityRecognitionPendingIntent = intent;
+    }
+
+    /**
+     * Get the current activity recognition client and disconnect from Location Services
+     */
+    private void requestDisconnection() {
+        getActivityRecognitionClient().disconnect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d(TAG, "onConnected");
+        requestActivityUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(TAG, "onConnectionSuspended");
     }
 }
