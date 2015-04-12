@@ -2,6 +2,7 @@ package edu.villanvoa.together;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -26,9 +28,29 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class IdeaDiscussion extends ToolbarActivity {
@@ -49,14 +71,21 @@ public class IdeaDiscussion extends ToolbarActivity {
     private CommentListAdapter adapter;
     private ParseObject ideaObject;
     private ParseObject userVoteObject;
+    private ParseObject userObject;
     private ParseQuery<ParseObject> ideaQuery;
     private ParseQuery<ParseObject> userVoteQuery;
+    private ParseQuery<ParseObject> userQuery;
     private SimpleDateFormat dateTimeStamp;
 
     private String userFbId, userName, commentTimeStamp, eventId, mapsURI;
-    private String ideaTitle, ideaLoc, ideaDesc, ideaObjectID;
+    private String ideaUserId, ideaTitle, ideaLoc, ideaDesc, ideaObjectID;
     private int ideaVotes;
     private boolean isCreator;
+
+    private ImageLib imgLib = null;
+    private String response_val = null;
+    private URL url;
+    private String host;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +98,7 @@ public class IdeaDiscussion extends ToolbarActivity {
         downvoteButton = (ToggleButton) findViewById(R.id.downvote_button);
 
         Parse.initialize(this, "YMPhMAAd5vjkITGtdjD2pNsLmfAIhYZ5u3gXFteJ", "5w3m3Zex78Knrz69foyli8FKAv96PEzNlhBNJL3l");
+        imgLib = new ImageLib(this);
 
         // Get facebook id for user currently logged in
         // Request user data and show the results
@@ -130,6 +160,7 @@ public class IdeaDiscussion extends ToolbarActivity {
         eventQuery.whereEqualTo("objectId", ideaObjectID);
         try {
             ideaObject = eventQuery.getFirst();
+            ideaUserId = ideaObject.getString("CreatorId");
             ideaTitle = ideaObject.getString("Title");
             ideaLoc = ideaObject.getString("Location");
             ideaDesc = ideaObject.getString("Details");
@@ -138,6 +169,33 @@ public class IdeaDiscussion extends ToolbarActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        SquareImage userImg = (SquareImage) findViewById(R.id.user_img);
+        final TextView userName = (TextView) findViewById(R.id.user_name);
+
+        String img_url = "http://graph.facebook.com/" + ideaUserId + "/picture?type=large";
+        imgLib.imageLoader.displayImage(img_url, userImg, imgLib.imageOptions); // Display Image
+
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,link");
+
+        new Request(
+                session,
+                "/" + ideaUserId,
+                parameters,
+                HttpMethod.GET,
+                new Request.Callback() {
+                    public void onCompleted(Response response) {
+                        try {
+                            Log.i(TAG,"Name: " + response.getGraphObject().getInnerJSONObject().getString("name"));
+                            userName.setText(response.getGraphObject().getInnerJSONObject().getString("name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
 
         //Map the Text Views for the idea information
         locationTV = (TextView) findViewById(R.id.idea_location_tv);
@@ -474,6 +532,41 @@ public class IdeaDiscussion extends ToolbarActivity {
         eventIntent.putExtra("EventObjectId", eventId);
         eventIntent.setFlags(eventIntent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(eventIntent);
+    }
+
+    class RequestTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... uri) {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpResponse response;
+            String responseString = null;
+            try {
+                response = httpclient.execute(new HttpGet(uri[0]));
+                StatusLine statusLine = response.getStatusLine();
+                if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    response.getEntity().writeTo(out);
+                    responseString = out.toString();
+                    out.close();
+                } else{
+                    //Closes the connection.
+                    response.getEntity().getContent().close();
+                    throw new IOException(statusLine.getReasonPhrase());
+                }
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return responseString;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            //Do anything with response..
+        }
     }
 
 }
