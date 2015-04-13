@@ -83,6 +83,10 @@
             android:name=".FriendStatusActivity"
             android:label="@string/title_activity_friend_status" >
         </activity>
+        <activity android:name=".ViewTime"
+            android:label="ViewTimeActivity">
+        </activity>
+
 
         <service
             android:name=".ActivityRecognitionIntentService"

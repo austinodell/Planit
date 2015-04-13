@@ -1,5 +1,6 @@
 package edu.villanvoa.together;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -124,7 +125,7 @@ public class ViewEvent extends ToolbarActivity {
             e.printStackTrace();
         }
         userTimesList = getUserTimes();
-        SuggestedTime suggestedTime = new SuggestedTime(userTimesList);
+        final SuggestedTime suggestedTime = new SuggestedTime(userTimesList);
         Log.d(TAG, "Suggested startTime: " + suggestedTime.getStartTime());
         Log.d(TAG, "Suggested endTime: " + suggestedTime.getEndTime());
 
@@ -146,6 +147,8 @@ public class ViewEvent extends ToolbarActivity {
         eventTime = (TextView) findViewById(R.id.view_event_time);
         eventFriendsGV = (FullGridView) findViewById(R.id.view_event_friends_container);
         eventIdeasTable = (FullGridView) findViewById(R.id.view_event_ideas_container);
+
+        final Context mContext = this;
 
         ideaRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeIdeaContainer);
         ideaRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -191,6 +194,17 @@ public class ViewEvent extends ToolbarActivity {
 
         eventDesc.setText(eventDetails);
         eventTime.setText("Time: " + suggestedTime.toString());
+
+        eventTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent timeIntent = new Intent(mContext,ViewTime.class);
+                timeIntent.putExtra("StartTime",suggestedTime.getStartTime());
+                timeIntent.putExtra("EndTime",suggestedTime.getEndTime());
+                timeIntent.putExtra("EventObjId",eventObjectId);
+                mContext.startActivity(timeIntent);
+            }
+        });
 
         friendsGridAdapter = new FriendsGridAdapter(this, friendsList, eventFriendsGV, imgLib);
         eventFriendsGV.setAdapter(friendsGridAdapter);
