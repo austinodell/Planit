@@ -81,6 +81,13 @@ public class TimeGridAdapter extends BaseAdapter {
 
         Time timeObj = new Time();
 
+        int wStartTime = timeObj.timeToInt(startTime) - 60;
+        int wEndTime = timeObj.timeToInt(endTime) + 60;
+
+        if(wStartTime < 0) {
+            wStartTime = 0;
+        }
+
         int sStartTime = timeObj.timeToInt(startTime) - 60;
         int sEndTime = timeObj.timeToInt(endTime) + 60;
 
@@ -95,23 +102,33 @@ public class TimeGridAdapter extends BaseAdapter {
         int width = size.x;
         int height = size.y;
 
-        name.setText(user.getName());
+        name.setText(user.getFirstName());
         times.setText(user.getStartTime() + " - " + user.getEndTime());
 
-        int barSize = timeObj.timeToInt(user.getEndTime())
-                - timeObj.timeToInt(user.getStartTime())
-                - picture.getLayoutParams().width;
+        int pStartTime = timeObj.timeToInt(user.getStartTime());
+        if(pStartTime < wStartTime) {
+            pStartTime = wStartTime;
+        }
+
+        int pEndTime = timeObj.timeToInt(user.getEndTime());
+        if(pEndTime > wEndTime) {
+            pEndTime = wEndTime;
+        }
+
+        int barSize = pEndTime - pStartTime + (width - wEndTime - wStartTime) - picture.getLayoutParams().width;
 
         if(barSize < 0) {
             barSize = 0;
         }
 
+        int spaceSize = pStartTime - wStartTime - picture.getLayoutParams().width;
+
         int oldSpaceSize = timeObj.timeToInt(user.getStartTime()) / 2;
 
         int newSpaceSize = sStartTime - oldSpaceSize;
 
-        bar.getLayoutParams().width = barSize + oldSpaceSize - newSpaceSize;
-        space.getLayoutParams().width = newSpaceSize;
+        bar.getLayoutParams().width = barSize;
+        space.getLayoutParams().width = spaceSize;
 
         return v;
     }

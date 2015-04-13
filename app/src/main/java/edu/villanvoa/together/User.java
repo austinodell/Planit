@@ -48,4 +48,9 @@ public class User {
     public String getEndTime() {
         return this.endTime;
     }
+
+    public String getFirstName() {
+        int spaceIndex = name.indexOf(' ');
+        return name.substring(0, spaceIndex);
+    }
 }
