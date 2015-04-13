@@ -2,8 +2,11 @@ package edu.villanvoa.together;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +17,11 @@ import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 
 public class NewIdea extends ActionBarActivity {
@@ -29,11 +37,14 @@ public class NewIdea extends ActionBarActivity {
     ParseObject ideaObject;
     String eventObjectId;
 
+    private Geocoder geocoder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_idea);
 
+        geocoder = new Geocoder(this, Locale.getDefault());
         //Receive the intent that started this activity
         callingIntent = getIntent();
         eventObjectId = callingIntent.getStringExtra("EventObjectId");
@@ -86,6 +97,22 @@ public class NewIdea extends ActionBarActivity {
         ideaTitle = titleET.getText().toString();
         ideaLoc = locACV.getText().toString();
         ideaDesc = descriptionET.getText().toString();
+
+
+        try {
+            List<Address> locResults = new ArrayList<Address>();
+            String temp = ideaLoc.replaceAll("&","%26");
+            locResults = geocoder.getFromLocationName(temp, 5);
+
+            for(int  i = 0; i < locResults.size(); i++){
+
+                Log.d("Addresses: " ,locResults.get(i).toString());
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if(ideaTitle.contentEquals("")){
             Toast.makeText(getApplicationContext(), "Empty Idea", Toast.LENGTH_SHORT).show();

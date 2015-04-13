@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -334,19 +333,8 @@ public class IdeaDiscussion extends ToolbarActivity {
 
     public void locationClicked(View view){
 
-        StringBuilder reformatedLoc = new StringBuilder();
-        String[] loc = ideaLoc.split("&");
-
-        for(int index = 0; index < loc.length; index++){
-
-            if(index!=0) {
-                reformatedLoc.append("%26");
-            }
-            reformatedLoc.append(loc[index]);
-
-        }
-
-        mapsURI = "http://maps.google.co.in/maps?q=" + reformatedLoc.toString();
+        ideaLoc = ideaLoc.replaceAll("&","%26");
+        mapsURI = "http://maps.google.co.in/maps?q=" + ideaLoc;
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(mapsURI));
         startActivity(i);
 
