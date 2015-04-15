@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,8 +12,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -183,12 +187,15 @@ public class ViewEvent extends ToolbarActivity {
 
         if (eventImgLocal) {
             eventImg.setImageResource(eventImgResource);
+            Toast.makeText(this,"Height A:" + eventImg.getHeight(),Toast.LENGTH_SHORT).show();
         } else {
             if (eventImgUrl == null) {
                 eventImg.setImageResource(R.drawable.bar);
+                Toast.makeText(this,"Height B:" + eventImg.getHeight(),Toast.LENGTH_SHORT).show();
             } else {
                 String img_url = "http://planit.austinodell.com/img/" + eventImgUrl;
                 imgLib.imageLoader.displayImage(img_url, eventImg, imgLib.imageOptions); // Display Image
+                Toast.makeText(this,"Height C:" + eventImg.getHeight(),Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -259,6 +266,23 @@ public class ViewEvent extends ToolbarActivity {
             addIdeaButton.setVisibility(View.INVISIBLE);
 
         }
+
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        final View spacer = (View) findViewById(R.id.spacer);
+
+        final ViewTreeObserver imgObserver= eventImg.getViewTreeObserver();
+        imgObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                spacer.getLayoutParams().height = eventImg.getHeight();
+            }
+        });
     }
 
     private void addFriendsFromParse(String eventObjectId) {
