@@ -18,7 +18,7 @@ import junit.framework.Test;
 import java.util.ArrayList;
 
 
-public class FriendStatusActivity extends ActionBarActivity {
+public class FriendStatusActivity extends ToolbarActivity {
     final static String TAG = "Debugging";
     ArrayList<String> friendsNames, friendsIds;
     ArrayList<FriendStatus> friendStatusList;
@@ -28,6 +28,8 @@ public class FriendStatusActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_status);
+
+        setupToolbar(R.string.title_activity_friend_status);
 
         friendsNames = new ArrayList<String>();
         friendsIds = new ArrayList<String>();
