@@ -54,7 +54,7 @@
     </style>
 
     <color name="colorPrimary">#26A69A</color>
-    <color name="colorPrimaryDark">#009688</color>
+    <color name="colorPrimaryDark">#00897B</color>
     <color name="colorAccent">#2226BD</color>
     <color name="actionbar_text_color">#FAFAFA</color>
     <color name="navigationdrawer_color">#F5F5F5</color>
