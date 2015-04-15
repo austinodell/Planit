@@ -30,6 +30,7 @@ public class FriendStatusActivity extends ToolbarActivity {
         setContentView(R.layout.activity_friend_status);
 
         setupToolbar(R.string.title_activity_friend_status);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         friendsNames = new ArrayList<String>();
         friendsIds = new ArrayList<String>();
@@ -61,5 +62,16 @@ public class FriendStatusActivity extends ToolbarActivity {
             Log.d(TAG, "Friend: " + friendsNames.get(i));
         }
         return friendStatusList;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

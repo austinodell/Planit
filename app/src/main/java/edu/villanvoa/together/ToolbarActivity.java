@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
  * Created by aodell on 3/16/15.
  */
 public class ToolbarActivity extends ActionBarActivity {
-    private Toolbar toolbar;
+    protected Toolbar toolbar;
 
     protected void setupToolbar(int toolbarTitle) {
         /* Set up toolbar to replace Actionbar */

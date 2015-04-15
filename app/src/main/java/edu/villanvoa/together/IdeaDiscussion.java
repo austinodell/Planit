@@ -165,6 +165,7 @@ public class IdeaDiscussion extends ToolbarActivity {
             ideaDesc = ideaObject.getString("Details");
             ideaVotes = ideaObject.getInt("Upvotes") - ideaObject.getInt("Downvotes");
             setupToolbar(ideaTitle);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -286,6 +287,9 @@ public class IdeaDiscussion extends ToolbarActivity {
         switch (item.getItemId()) {
             case R.id.action_pick_idea:
                 onPickIdeaClicked();
+                return true;
+            case android.R.id.home:
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
