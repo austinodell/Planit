@@ -37,7 +37,6 @@
         <item>Roadtrip</item>
         <item>Shop</item>
         <item>Ski</item>
-        <item>Smores</item>
     </string-array>
     <string name="title_activity_pick_time">Choose Your Availability</string>
     <string name="title_activity_friend_status">Status of Friends</string>
