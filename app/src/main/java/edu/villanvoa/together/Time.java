@@ -25,8 +25,56 @@ public class Time {
         int t = hour * 60;
         t += min;
 
-        Log.i("debug","hour = " + hour + " min = " + min + " isam = " + isam + " t = " + t);
+        return t;
+    }
 
+    public String findMidTime(String startTime, String endTime) {
+        int start = timeToInt(startTime);
+        int end = timeToInt(endTime);
+        int mid;
+
+        Log.i("debug","start Time: " + start);
+        Log.i("debug","end Time: " + end);
+
+        if(end > start) {
+            mid = (end + start ) / 2;
+            Log.i("debug","mid Time: " + mid);
+        } else {
+            int maxtime = timeToInt("11:59 PM");
+            mid = (end + maxtime + start) / 2;
+            if(mid > maxtime) {
+                mid -= maxtime;
+            }
+            Log.i("debug","mid (special) Time: " + mid);
+        }
+
+        return intToTime(mid);
+    }
+
+    public String intToTime(int time) {
+        if(time < 0) {
+            time = timeToInt("11:59 PM") + time;
+        }
+
+        int hour = time / 60;
+        int minute = time % 60;
+        boolean ispm = hour > 12;
+        String ampm = "AM";
+
+        if(ispm) {
+            hour -= 12;
+            ampm = "PM";
+        }
+
+        String smin = String.valueOf(minute);
+
+        if(minute < 10) {
+            smin = "0" + minute;
+        }
+
+        String t = hour + ":" + smin + " " + ampm;
+
+        Log.i("debug","time: " + time + ", hour: " + hour + ", minute: " + minute + ", isam: " + ispm);
         return t;
     }
 }

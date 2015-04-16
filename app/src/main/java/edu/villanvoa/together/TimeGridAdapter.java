@@ -81,19 +81,8 @@ public class TimeGridAdapter extends BaseAdapter {
 
         Time timeObj = new Time();
 
-        int wStartTime = timeObj.timeToInt(startTime) - 60;
-        int wEndTime = timeObj.timeToInt(endTime) + 60;
-
-        if(wStartTime < 0) {
-            wStartTime = 0;
-        }
-
-        int sStartTime = timeObj.timeToInt(startTime) - 60;
-        int sEndTime = timeObj.timeToInt(endTime) + 60;
-
-        if(sStartTime < 0) {
-            sStartTime = 0;
-        }
+        name.setText(user.getFirstName());
+        times.setText(user.getStartTime() + " - " + user.getEndTime());
 
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -102,33 +91,64 @@ public class TimeGridAdapter extends BaseAdapter {
         int width = size.x;
         int height = size.y;
 
-        name.setText(user.getFirstName());
-        times.setText(user.getStartTime() + " - " + user.getEndTime());
+        /*int screenStart = 0, screenEnd = width;
+        int timeSpan = timeObj.timeToInt(endTime) - timeObj.timeToInt(startTime) + 120;
+        int screenSpan = screenEnd - screenStart;
+        int diff = screenSpan - timeSpan;
 
-        int pStartTime = timeObj.timeToInt(user.getStartTime());
-        if(pStartTime < wStartTime) {
-            pStartTime = wStartTime;
+        int pStartTime = timeObj.timeToInt(user.getStartTime()) - timeObj.timeToInt(startTime) + 60;
+        int pEndTime = timeObj.timeToInt(user.getEndTime()) - timeObj.timeToInt(startTime) + 60;
+
+        if(pEndTime < pStartTime) {
+            pEndTime += timeObj.timeToInt("11:59 PM");
         }
 
-        int pEndTime = timeObj.timeToInt(user.getEndTime());
-        if(pEndTime > wEndTime) {
-            pEndTime = wEndTime;
+        int pStart = pStartTime + 50;
+        int pBarSize = pEndTime - pStartTime - picture.getLayoutParams().width;
+        int pSpaceSize = pStart;
+
+        if(pStart < 0) {
+            pSpaceSize = 0;
+            pBarSize += pStart;
         }
 
-        int barSize = pEndTime - pStartTime + (width - wEndTime - wStartTime) - picture.getLayoutParams().width;
+        bar.getLayoutParams().width = pBarSize;
+        space.getLayoutParams().width = pStart;*/
 
-        if(barSize < 0) {
-            barSize = 0;
+        double tStartTime = timeObj.timeToInt(startTime);
+        double tEndTime = timeObj.timeToInt(endTime);
+
+        if(tStartTime < 0) {
+            tStartTime += timeObj.timeToInt("11:59 PM");
         }
 
-        int spaceSize = pStartTime - wStartTime - picture.getLayoutParams().width;
+        if(tEndTime < tStartTime) {
+            tEndTime += timeObj.timeToInt("11:59 PM");
+        }
 
-        int oldSpaceSize = timeObj.timeToInt(user.getStartTime()) / 2;
+        tStartTime -= 60;
+        tEndTime += 60;
 
-        int newSpaceSize = sStartTime - oldSpaceSize;
+        double pStartTime = timeObj.timeToInt(user.getStartTime());
+        double pEndTime = timeObj.timeToInt(user.getEndTime());
 
-        bar.getLayoutParams().width = barSize;
-        space.getLayoutParams().width = spaceSize;
+        double rate = (double) ((width - 40) / (tEndTime - tStartTime));
+
+        double cpStartTime = (pStartTime - tStartTime ) * rate + 20;
+        double cpEndTime = (width - 20) - ((tEndTime - pEndTime) * rate);
+
+        double pBarSize = cpEndTime - cpStartTime - 120;
+
+        bar.getLayoutParams().width = (int) pBarSize;
+        space.getLayoutParams().width = (int) cpStartTime;
+
+        Log.i(TAG, "User: " + user.getFirstName() + ", tStartTime: " + tStartTime + ", tEndTime: " + tEndTime + ", barsize: " + pBarSize + ", spacesize: " +
+                cpStartTime + ", cpEndTime: " + cpEndTime + ", pStartTime: " + pStartTime +
+                ", pEndTime: " + pEndTime + ", rate: " + rate);
+
+        /*Log.i(TAG,"Person: " + user.getFirstName() + ", timespan: " + timeSpan + ", screenSpan: " + screenSpan + ", diff: " + diff +
+                ", pStart: " + pStart + ", pStartTime: " + pStartTime + ", pEndTime: " + pEndTime +
+                ", barSize: " + pBarSize + ", pSpaceSize: " + pSpaceSize);*/
 
         return v;
     }

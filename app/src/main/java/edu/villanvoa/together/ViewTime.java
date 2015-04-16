@@ -1,10 +1,16 @@
 package edu.villanvoa.together;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -47,16 +53,45 @@ public class ViewTime extends ToolbarActivity {
         userList = new ArrayList<User>();
         getUserTimes();
 
-        Time timeObj = new Time();
-        timeObj.timeToInt("12:00 AM");
-        timeObj.timeToInt("11:59 PM");
-        timeObj.timeToInt("9:00 PM");
-        timeObj.timeToInt("11:20 PM");
+        setupToolbar(startTime + " - " + endTime);
 
         // Setup Adapter
         GridView gridView = (GridView) findViewById(R.id.container);
         timeAdapter = new TimeGridAdapter(this, userList, imgLib, startTime, endTime);
         gridView.setAdapter(timeAdapter);
+
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        View span1_1 = (View) findViewById(R.id.span1_1);
+        View span1_2 = (View) findViewById(R.id.span1_2);
+        View span2_1 = (View) findViewById(R.id.span2_1);
+        View span2_2 = (View) findViewById(R.id.span2_2);
+        int spanWidth = (width - 86) / 4;
+        Log.i("debug","SpanWidth: " + spanWidth + ", ScreenWidth: " + width);
+
+        span1_1.getLayoutParams().width = spanWidth;
+        span1_2.getLayoutParams().width = spanWidth;
+        span2_1.getLayoutParams().width = spanWidth;
+        span2_2.getLayoutParams().width = spanWidth;
+
+        TextView time1 = (TextView) findViewById(R.id.tv_time_1);
+        TextView time2 = (TextView) findViewById(R.id.tv_time_2);
+        TextView time3 = (TextView) findViewById(R.id.tv_time_3);
+
+        Time timeObj = new Time();
+        int sTimeI = timeObj.timeToInt(startTime) - 60;
+        String sTime = timeObj.intToTime(sTimeI);
+        String mTime = timeObj.findMidTime(startTime,endTime);
+        int eTimeI = timeObj.timeToInt(endTime) + 60;
+        String eTime = timeObj.intToTime(eTimeI);
+
+        time1.setText(sTime);
+        time2.setText(mTime);
+        time3.setText(eTime);
     }
 
     // Add user with Image URL (downloaded)
