@@ -35,21 +35,13 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 public class IdeaDiscussion extends ToolbarActivity {
@@ -188,7 +180,7 @@ public class IdeaDiscussion extends ToolbarActivity {
                 new Request.Callback() {
                     public void onCompleted(Response response) {
                         try {
-                            Log.i(TAG,"Name: " + response.getGraphObject().getInnerJSONObject().getString("name"));
+                           // Log.i(TAG,"Name: " + response.getGraphObject().getInnerJSONObject().getString("name"));
                             userName.setText(response.getGraphObject().getInnerJSONObject().getString("name"));
                         } catch (JSONException e) {
                             e.printStackTrace();

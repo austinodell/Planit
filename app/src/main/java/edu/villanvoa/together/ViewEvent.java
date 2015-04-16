@@ -161,6 +161,10 @@ public class ViewEvent extends ToolbarActivity {
                 //Request the adapter update its view
                 ideaListAdapter.notifyDataSetChanged();
 
+                userTimesList = getUserTimes();
+                suggestedTime.updateList(userTimesList);
+                eventTime.setText("Time: " + suggestedTime.toString());
+
                 // Stop the refresh once you have the data
                ideaRefreshLayout.setRefreshing(false);
 

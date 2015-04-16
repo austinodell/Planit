@@ -1,7 +1,5 @@
 package edu.villanvoa.together;
 
-import android.util.Log;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -106,6 +104,14 @@ public class SuggestedTime {
 
     public void setUserAvailableTimes(List<TimeAvailable> userAvailableTimes) {
         this.userAvailableTimes = userAvailableTimes;
+    }
+
+    public void updateList(List<TimeAvailable> userAvailableTimes){
+
+        this.userAvailableTimes = userAvailableTimes;
+        this.startTime = suggestedStartTime(userAvailableTimes);
+        this.endTime = suggestedEndTime(userAvailableTimes);
+
     }
 
     @Override
