@@ -90,12 +90,12 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
         GridView gridView = (GridView) findViewById(R.id.container);
         LinearLayout sad_layout = (LinearLayout) findViewById(R.id.sad_layout);
 
-        if(eventsList.size() == 0) {
+        if(eventsList.size() == 0) { // Check to see if user has events
             gridView.setVisibility(View.INVISIBLE);
-            sad_layout.setVisibility(View.VISIBLE);
+            sad_layout.setVisibility(View.VISIBLE); // Display message
         } else {
             gridView.setVisibility(View.VISIBLE);
-            sad_layout.setVisibility(View.INVISIBLE);
+            sad_layout.setVisibility(View.INVISIBLE); // Hide message
 
             eventAdapter = new HomeGridAdapter(this, eventsList, imgLib);
             gridView.setAdapter(eventAdapter);
@@ -123,7 +123,6 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
 
                 // Populate Events List
                 addEventsFromParse(userFbId);
-                Toast.makeText(mContext,"Eventslist size: " + eventsList.size(),Toast.LENGTH_SHORT).show();
                 eventAdapter.addItems(eventsList);
 
                 eventAdapter.notifyDataSetChanged();
