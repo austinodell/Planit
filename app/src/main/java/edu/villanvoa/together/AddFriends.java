@@ -188,7 +188,7 @@ public class AddFriends extends ToolbarActivity {
         friendsGridAdapter = new FriendsGridAdapter(this,friendsList,btnView,gridView,imgLib);
         gridView.setAdapter(friendsGridAdapter);
 
-        final ImageButton nextBtn = (ImageButton) findViewById(R.id.next_page_btn);
+        final Button nextBtn = (Button) findViewById(R.id.next_page_btn);
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
