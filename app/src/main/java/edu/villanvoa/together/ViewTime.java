@@ -7,6 +7,9 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridView;
@@ -54,6 +57,7 @@ public class ViewTime extends ToolbarActivity {
         getUserTimes();
 
         setupToolbar(startTime + " - " + endTime);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Setup Adapter
         GridView gridView = (GridView) findViewById(R.id.container);
@@ -120,6 +124,18 @@ public class ViewTime extends ToolbarActivity {
         {
             e.printStackTrace();
             Log.d("debug", e.toString());
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

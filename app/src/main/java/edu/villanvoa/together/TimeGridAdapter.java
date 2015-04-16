@@ -132,12 +132,16 @@ public class TimeGridAdapter extends BaseAdapter {
         double pStartTime = timeObj.timeToInt(user.getStartTime());
         double pEndTime = timeObj.timeToInt(user.getEndTime());
 
+        if(pEndTime < pStartTime) {
+            pEndTime += timeObj.timeToInt("11:59 PM");
+        }
+
         double rate = (double) ((width - 40) / (tEndTime - tStartTime));
 
         double cpStartTime = (pStartTime - tStartTime ) * rate + 20;
         double cpEndTime = (width - 20) - ((tEndTime - pEndTime) * rate);
 
-        double pBarSize = cpEndTime - cpStartTime - 120;
+        double pBarSize = cpEndTime - Math.abs(cpStartTime) - 120;
 
         bar.getLayoutParams().width = (int) pBarSize;
         space.getLayoutParams().width = (int) cpStartTime;
