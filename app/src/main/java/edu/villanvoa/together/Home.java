@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.facebook.android.Facebook;
@@ -86,8 +88,18 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
 
         // Setup Adapter
         GridView gridView = (GridView) findViewById(R.id.container);
-        eventAdapter = new HomeGridAdapter(this, eventsList, imgLib);
-        gridView.setAdapter(eventAdapter);
+        LinearLayout sad_layout = (LinearLayout) findViewById(R.id.sad_layout);
+
+        if(eventsList.size() == 0) {
+            gridView.setVisibility(View.INVISIBLE);
+            sad_layout.setVisibility(View.VISIBLE);
+        } else {
+            gridView.setVisibility(View.VISIBLE);
+            sad_layout.setVisibility(View.INVISIBLE);
+
+            eventAdapter = new HomeGridAdapter(this, eventsList, imgLib);
+            gridView.setAdapter(eventAdapter);
+        }
 
         // Add New Event Button Setup
         Button new_event_btn = (Button) findViewById(R.id.new_event_btn);
@@ -111,6 +123,7 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
 
                 // Populate Events List
                 addEventsFromParse(userFbId);
+                Toast.makeText(mContext,"Eventslist size: " + eventsList.size(),Toast.LENGTH_SHORT).show();
                 eventAdapter.addItems(eventsList);
 
                 eventAdapter.notifyDataSetChanged();
