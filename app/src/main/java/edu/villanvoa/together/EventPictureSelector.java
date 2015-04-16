@@ -26,7 +26,6 @@ public class EventPictureSelector {
         imgOptions.add(R.drawable.roadtrip);
         imgOptions.add(R.drawable.shop);
         imgOptions.add(R.drawable.ski);
-        imgOptions.add(R.drawable.smores);
 
         chooseRandom();
     }
