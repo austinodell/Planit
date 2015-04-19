@@ -15,10 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.facebook.Session;
-import com.facebook.android.Facebook;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.parse.Parse;
@@ -78,7 +76,7 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
         userFbId = sharedPreferences.getString("UserFbId", null);
 
         // Initializes Universal Image Loader Library to load images given URLs
-        ImageLib imgLib = new ImageLib(mContext);
+        final ImageLib imgLib = new ImageLib(mContext);
 
         // Used to store all events to pass to HomeGridAdapter
         eventsList = new ArrayList<Event>();
@@ -87,8 +85,8 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
         addEventsFromParse(userFbId);
 
         // Setup Adapter
-        GridView gridView = (GridView) findViewById(R.id.container);
-        LinearLayout sad_layout = (LinearLayout) findViewById(R.id.sad_layout);
+        final GridView gridView = (GridView) findViewById(R.id.container);
+        final LinearLayout sad_layout = (LinearLayout) findViewById(R.id.sad_layout);
 
         if(eventsList.size() == 0) { // Check to see if user has events
             gridView.setVisibility(View.INVISIBLE);
@@ -123,9 +121,25 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
 
                 // Populate Events List
                 addEventsFromParse(userFbId);
-                eventAdapter.addItems(eventsList);
 
-                eventAdapter.notifyDataSetChanged();
+                if(eventsList.size() > 0 && eventAdapter == null){
+                    gridView.setVisibility(View.VISIBLE);
+                    sad_layout.setVisibility(View.INVISIBLE); // Hide message
+                    eventAdapter = new HomeGridAdapter(getApplicationContext(), eventsList, imgLib);
+                    gridView.setAdapter(eventAdapter);
+                }
+                else if(eventsList.size()==0 && eventAdapter != null){
+
+                    gridView.setVisibility(View.INVISIBLE);
+                    sad_layout.setVisibility(View.VISIBLE); // Display message
+                    eventAdapter = null;
+
+                }
+
+                if(eventAdapter != null) {
+                    eventAdapter.addItems(eventsList);
+                    eventAdapter.notifyDataSetChanged();
+                }
                 // Stop the refresh once you have the data
                 swipeEventLayout.setRefreshing(false);
 
@@ -172,6 +186,10 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
                     }
                 }
             } catch (ParseException e) {
+                e.printStackTrace();
+                Log.d(TAG, e.toString());
+            }
+            catch (IndexOutOfBoundsException e){
                 e.printStackTrace();
                 Log.d(TAG, e.toString());
             }

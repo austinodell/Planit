@@ -5,19 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/comment_list_user_name"
-            android:layout_width="147dp"
-            android:layout_height="wrap_content"
-            android:text="UserName"
-            android:textSize="16dp"
-            android:maxLines = "1"
-            android:paddingTop="5dp"
-            android:paddingLeft="5dp"
-            android:layout_gravity="right" />
+    <TextView
+        android:id="@+id/ucomment_list_user_name"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="UserName"
+        android:textSize="16dp"
+        android:maxLines = "1"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp" />
 
     <TextView
-        android:id="@+id/comment_list_comment"
+        android:id="@+id/ucomment_list_comment"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -32,7 +31,7 @@
         android:paddingBottom="0dp" />
 
     <TextView
-        android:id="@+id/comment_time_stamp"
+        android:id="@+id/ucomment_time_stamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -41,4 +40,5 @@
         android:paddingRight="10dp"
         android:maxLines = "1"
         android:paddingTop="0dp"/>
+
 </LinearLayout>
