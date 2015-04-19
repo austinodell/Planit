@@ -7,7 +7,7 @@
 
         <TextView
             android:id="@+id/comment_list_user_name"
-            android:layout_width="147dp"
+            android:layout_width="102dp"
             android:layout_height="wrap_content"
             android:text="UserName"
             android:textSize="16dp"

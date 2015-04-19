@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -55,20 +54,28 @@ public class CommentListAdapter extends BaseAdapter {
     }
 
     @Override
+    public int getViewTypeCount(){return 2;}
+
+    @Override
+    public int getItemViewType(int position){
+        Comment com = commentList.get(position);
+        if(com.getUserID().equals(userFbId)){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View v = convertView;
         TextView name, comment,time;
-        final ImageView picture;
-        boolean isUserComment = false;
-
-        Comment com = getItem(position);
+        int type = getItemViewType(position);
 
         if (v == null) {
 
-            if(userFbId.equals(com.getUserID())){
-
-                isUserComment = true;
+            if(type == 0){
 
                 v = mInflater.inflate(R.layout.user_comment_item, parent, false);
                 v.setTag(R.id.ucomment_list_user_name, v.findViewById(R.id.ucomment_list_user_name));
@@ -76,8 +83,6 @@ public class CommentListAdapter extends BaseAdapter {
                 v.setTag(R.id.ucomment_time_stamp, v.findViewById(R.id.ucomment_time_stamp));
 
             }else {
-
-                isUserComment = false;
 
                 v = mInflater.inflate(R.layout.comment_item, parent, false);
                 v.setTag(R.id.comment_list_user_name, v.findViewById(R.id.comment_list_user_name));
@@ -87,7 +92,9 @@ public class CommentListAdapter extends BaseAdapter {
 
         }
 
-        if(isUserComment){
+        Comment com = commentList.get(position);
+
+        if(type == 0){
             name = (TextView) v.getTag(R.id.ucomment_list_user_name);
             comment = (TextView) v.getTag(R.id.ucomment_list_comment);
             time = (TextView) v.getTag(R.id.ucomment_time_stamp);
@@ -100,9 +107,6 @@ public class CommentListAdapter extends BaseAdapter {
         name.setText(com.getName());
         comment.setText(com.getComment());
         time.setText(com.getTimeStamp());
-
-        String commenterID = com.getUserID();
-        final String img_url = "https://graph.facebook.com/" + commenterID + "/picture?type=large";
 
         notifyDataSetChanged();
 
