@@ -81,6 +81,7 @@ public class HomeGridAdapter extends BaseAdapter {
                 Log.d(TAG, "Event (onItemClick): " + event.getName());
 
                 Intent viewEventIntent = new Intent(mContext,ViewEvent.class);
+                viewEventIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 viewEventIntent.putExtra("EventObjectId", event.getId());
                 mContext.startActivity(viewEventIntent);
             }

@@ -46,6 +46,8 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
     private ImageLib imgLib;
 
     private HomeGridAdapter eventAdapter;
+    GridView gridView;
+    LinearLayout sad_layout;
 
     private int event_id = 0; // temporary - to be populated by Parse
 
@@ -85,8 +87,8 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
         addEventsFromParse(userFbId);
 
         // Setup Adapter
-        final GridView gridView = (GridView) findViewById(R.id.container);
-        final LinearLayout sad_layout = (LinearLayout) findViewById(R.id.sad_layout);
+        gridView = (GridView) findViewById(R.id.container);
+        sad_layout = (LinearLayout) findViewById(R.id.sad_layout);
 
         if(eventsList.size() == 0) { // Check to see if user has events
             gridView.setVisibility(View.INVISIBLE);
@@ -117,6 +119,7 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
                 Log.d("Scroll Container", "Refreshing");
 
                 // Used to store all events to pass to HomeGridAdapter
+
                 eventsList = new ArrayList<Event>();
 
                 // Populate Events List
