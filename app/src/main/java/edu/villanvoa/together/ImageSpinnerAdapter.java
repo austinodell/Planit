@@ -35,7 +35,8 @@ public class ImageSpinnerAdapter extends BaseAdapter {
     @Override
     public int getCount()
     {
-        return mList.length + 1;
+        return mList.length;
+        // return mList.length + 1; // Future implementation including uploading own photo
     }
 
     @Override
