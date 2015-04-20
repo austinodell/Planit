@@ -184,6 +184,9 @@ public class IdeaDiscussion extends ToolbarActivity {
                             userName.setText(response.getGraphObject().getInnerJSONObject().getString("name"));
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        } catch (NullPointerException e){
+                            e.printStackTrace();
+                            Log.d(TAG, e.toString());
                         }
                     }
                 }
