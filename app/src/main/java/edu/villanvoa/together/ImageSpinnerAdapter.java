@@ -2,6 +2,11 @@ package edu.villanvoa.together;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,8 +69,13 @@ public class ImageSpinnerAdapter extends BaseAdapter {
             String title = mList.get(position);
             int resid = mContext.getResources().getIdentifier(title.toLowerCase(), "drawable", mContext.getPackageName());
 
+            Log.i("imageName","Image Name: " + title.toLowerCase());
+
+            picture.setImageBitmap(
+                    decodeSampledBitmapFromResource(mContext.getResources(), resid, 35, 35, mContext));
+
             name.setText(title);
-            picture.setImageResource(resid);
+            //picture.setImageResource(resid);
         } else {
             v = lastItem;
         }
@@ -73,4 +83,52 @@ public class ImageSpinnerAdapter extends BaseAdapter {
         return v;
     }
 
+    private static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        Log.i("sampleImage", "Displaying img at " + reqWidth + "px x " + reqHeight + "px (" + inSampleSize + " SampleSize)");
+
+        return inSampleSize;
+    }
+
+    private static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+                                                         float dipWidth, float dipHeight, Context mContext) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        int reqWidth = dipToPixels(mContext,dipWidth);
+        int reqHeight = dipToPixels(mContext,dipHeight);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    private static int dipToPixels(Context context, float dipValue) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
+    }
 }
