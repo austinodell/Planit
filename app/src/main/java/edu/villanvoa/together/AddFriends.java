@@ -199,28 +199,14 @@ public class AddFriends extends ToolbarActivity {
         imageSpinner = (Spinner) findViewById(R.id.event_image_spinner);
 
         inflator = LayoutInflater.from(this);
-
-        //ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.new_event_spinner,android.R.layout.simple_spinner_dropdown_item);
-        final ArrayList<String> spinnerOptions = new ArrayList<String>();
-        spinnerOptions.add("Bar");
-        spinnerOptions.add("Basketball");
-        spinnerOptions.add("Bowl");
-        spinnerOptions.add("Club");
-        spinnerOptions.add("Concert");
-        spinnerOptions.add("Dinner");
-        spinnerOptions.add("Movie");
-        spinnerOptions.add("Picnic");
-        spinnerOptions.add("Roadtrip");
-        spinnerOptions.add("Shop");
-        spinnerOptions.add("Ski");
-        spinnerOptions.add("Smores");
+        final String[] spinnerOptions = getResources().getStringArray(R.array.new_event_spinner);
         ImageSpinnerAdapter spinnerAdapter = new ImageSpinnerAdapter(mContext,spinnerOptions,setupLastItemInSpinnerIfNotSetup());
         imageSpinner.setAdapter(spinnerAdapter);
 
         imageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == spinnerOptions.size()) {
+                if(position == spinnerOptions.length) {
                     selectImage();
                 } else {
                     imgLocal = true;
