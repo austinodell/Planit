@@ -238,7 +238,7 @@ public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionC
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
             Calendar calendar = Calendar.getInstance();
-            long frequency = 5 * 1000; // in ms
+            long frequency = 60 * 1000; // in ms
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
         }
     }
