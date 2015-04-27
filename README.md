@@ -2,7 +2,7 @@
 
 --
 
-This app was created for the Villanova University Mobile Device Programming class and was entered into the Villanova Student Entrepreneurship Competition.
+This app was created for the Villanova University Mobile Device Programming class and was entered into the Villanova Student Entrepreneurship Competition.  It is under development in the dev branch.
 
 ## Contributors
 *   [Kofi Atoubi](https://github.com/kofiatoubi)
