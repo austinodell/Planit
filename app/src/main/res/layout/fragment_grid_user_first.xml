@@ -5,7 +5,7 @@
     android:layout_gravity="center_vertical"
     android:padding="20sp">
 
-    <edu.villanvoa.together.SquareImageButton
+    <edu.villanova.planit.SquareImageButton
         android:id="@+id/add_user_btn"
         android:scaleType="centerCrop"
         android:layout_width="fill_parent"

@@ -82,7 +82,7 @@
                         android.support.v7.cardview:cardCornerRadius="2dp"
                         android.support.v7.cardview:cardPreventCornerOverlap="false">
 
-                        <edu.villanvoa.together.FullGridView
+                        <edu.villanova.planit.FullGridView
                             android:id="@+id/view_event_friends_container"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
@@ -135,7 +135,7 @@
                                 android:textSize="16sp"
                                 android:gravity="center" />
 
-                            <edu.villanvoa.together.FullGridView
+                            <edu.villanova.planit.FullGridView
                                 android:id="@+id/view_event_ideas_container"
                                 android:layout_width="fill_parent"
                                 android:layout_height="150dp"
