@@ -5,10 +5,10 @@
 This app was created for the Villanova University Mobile Device Programming class and was entered into the Villanova Student Entrepreneurship Competition.
 
 ## Contributors
-*   [Kofi Atoubi](https://github.com/kofiatoubi)
+* [Kofi Atoubi](https://github.com/katuobi)
 *	[Austin Odell](https://github.com/austinodell)
-*	[Andrew Rinaldi](https://github.com/andrewrinaldi)
-*	[Matthew Wiedmeier](https://github.com/mw)
+*	[Andrew Rinaldi](https://github.com/arinald)
+*	[Matthew Wiedmeier](https://github.com/MWiedmeier)
 
 ## Screenshots
 <img src="http://planit.odell.cc/screenshots/home.png" alt="Home Screen" style="width:200px">
