@@ -1,0 +1,204 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android.support.v7.cardview="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.villanova.planit.IdeaDiscussion"
+    android:orientation="vertical"
+    android:weightSum="1"
+    >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </include>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/page_card_color"
+        android:paddingTop="25dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android.support.v7.cardview:cardElevation="3dp"
+        android.support.v7.cardview:cardCornerRadius="2dp"
+        android.support.v7.cardview:cardPreventCornerOverlap="false">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <edu.villanova.planit.SquareImage
+                android:id="@+id/user_img"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:padding="5dp"
+                    android:id="@+id/user_name"
+                    android:text="Name"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/idea_description_tv"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:hint="Description"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:id="@+id/idea_location_tv"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:hint="Location"
+                    android:onClick="locationClicked"
+                    android:padding="5dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="vertical"
+                android:id="@+id/center_button_layout"
+                android:paddingBottom="0dp">
+
+                <ToggleButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/upvote_arrow_button"
+                    android:onClick="upvoteClicked"
+                    android:id="@+id/upvote_button"/>
+
+                <TextView
+                    android:id="@+id/idea_votes_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="16sp"
+                    android:text="#"
+                    android:textColor="#000000"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"/>
+
+                <ToggleButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textOn=""
+                    android:textOff=""
+                    android:onClick="downvoteClicked"
+                    android:background="@drawable/da_arrow_button"
+                    android:id="@+id/downvote_button"/>
+
+            </LinearLayout>
+            
+        </LinearLayout>
+        
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/page_card_color"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android.support.v7.cardview:cardElevation="3dp"
+        android.support.v7.cardview:cardCornerRadius="2dp"
+        android.support.v7.cardview:cardPreventCornerOverlap="false">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeCommentContainer"
+                android:layout_alignParentTop="true"
+                android:layout_above="@+id/horizontal_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="290dp"
+                    android:id="@+id/comment_lv"
+                    android:divider="@color/primary_dark_material_dark"
+                    android:dividerHeight="1dp">
+                </ListView>
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <include
+                layout="@layout/horizontal_line"
+                android:id="@+id/horizontal_line"
+                android:layout_above="@+id/comment_list_footer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/comment_list_footer">
+
+                <EditText
+                    android:id="@+id/new_comment_et"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:maxLength="140"
+                    android:layout_weight="1"/>
+
+
+                <Button
+                    android:layout_width="35sp"
+                    android:layout_height="35sp"
+                    android:gravity="center|center_vertical"
+                    android:background="@drawable/fab_grey"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:text="+"
+                    android:onClick="addNewCommentClicked"
+                    android:id="@+id/addCommentButton"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+</LinearLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="right">
+
+    <edu.villanova.planit.SquareImage
+        android:id="@+id/friend_status_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:minHeight="60dp"
+        android:scaleType="centerCrop"
+        android:gravity="left"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textStyle="bold"
+        android:text="Name: "
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:id="@+id/friend_status_friendName"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:text="Status"
+        android:id="@+id/friend_status_friendStatus"
+        android:gravity="center_vertical"/>
+</LinearLayout>

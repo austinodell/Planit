@@ -1,0 +1,180 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android.support.v7.cardview="http://schemas.android.com/apk/res-auto"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:background="@color/page_background">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/toolbar"
+        android:background="@color/page_background">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@color/page_card_color"
+            android.support.v7.cardview:cardElevation="3dp"
+            android.support.v7.cardview:cardCornerRadius="2dp"
+            android.support.v7.cardview:cardPreventCornerOverlap="false">
+
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1">
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20sp"
+                    android:paddingRight="20sp"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp">
+
+                    <TextView
+                        android:text="Name:"
+                        android:textSize="18sp"
+                        android:paddingRight="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <EditText
+                        android:id="@+id/event_name_et"
+                        android:textSize="16sp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" />
+
+                </TableRow>
+
+                <include
+                    layout="@layout/horizontal_line"
+                    android:layout_height="1dp"
+                    android:layout_width="fill_parent" />
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20sp"
+                    android:paddingRight="20sp"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp">
+
+                    <TextView
+                        android:text="Details:"
+                        android:textSize="18sp"
+                        android:paddingRight="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <EditText
+                        android:id="@+id/event_details_et"
+                        android:textSize="16sp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:maxLines="3"
+                        android:hint="(Optional)" />
+
+                </TableRow>
+
+                <include
+                    layout="@layout/horizontal_line"
+                    android:layout_height="1dp"
+                    android:layout_width="fill_parent" />
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20sp"
+                    android:paddingRight="20sp"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp">
+
+                    <TextView
+                        android:text="Image:"
+                        android:textSize="18sp"
+                        android:paddingRight="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <Spinner
+                        android:id="@+id/event_image_spinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                </TableRow>
+
+            </TableLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/page_card_color"
+            android.support.v7.cardview:cardElevation="3dp"
+            android.support.v7.cardview:cardCornerRadius="2dp"
+            android.support.v7.cardview:cardPreventCornerOverlap="false">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/add_user_hint_tv"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/horizontal_line"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"/>
+
+                <GridView
+                    android:id="@+id/container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:verticalSpacing="0dp"
+                    android:horizontalSpacing="0dp"
+                    android:stretchMode="columnWidth"
+                    android:numColumns="4" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:text="+"
+        android:textSize="26sp"
+        android:textColor="@android:color/white"
+        android:id="@+id/next_page_btn"
+        android:background="@drawable/fab"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="24dp"
+        android:layout_marginRight="24dp"/>
+
+</RelativeLayout>

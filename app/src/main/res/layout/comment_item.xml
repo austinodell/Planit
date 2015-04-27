@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@android:color/background_light"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/comment_list_user_name"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:textSize="16dp"
+            android:maxLines = "1"
+            android:paddingTop="5dp"
+            android:paddingLeft="5dp"
+            android:layout_gravity="right"
+            android:paddingRight="10dp" />
+
+    <TextView
+        android:id="@+id/comment_list_comment"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:maxLength="140"
+        android:maxLines="5"
+        android:text="Awesome"
+        android:textSize="14dp"
+        android:padding="5dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:layout_gravity="right"
+        android:gravity="left" />
+
+    <TextView
+        android:id="@+id/comment_time_stamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="time stamp"
+        android:textSize="10dp"
+        android:paddingRight="10dp"
+        android:maxLines = "1"
+        android:paddingTop="0dp"/>
+</LinearLayout>
