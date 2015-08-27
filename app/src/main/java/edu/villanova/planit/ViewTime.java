@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.austinodell.common.ToolbarActivity;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;

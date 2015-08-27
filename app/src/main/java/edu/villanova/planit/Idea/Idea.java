@@ -1,4 +1,4 @@
-package edu.villanova.planit;
+package edu.villanova.planit.Idea;
 
 /**
  * Created by aodell on 3/12/15.

@@ -1,8 +1,10 @@
-package edu.villanova.planit;
+package edu.villanova.planit.Service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import edu.villanova.planit.CheckNotificationService;
 
 /**
  * Created by wildcat on 3/11/2015.

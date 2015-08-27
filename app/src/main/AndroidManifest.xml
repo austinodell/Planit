@@ -62,7 +62,7 @@
             android:screenOrientation="portrait" >
         </activity>
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".Service.AlarmReceiver" />
 
         <service
             android:name=".CheckNotificationService"
@@ -80,7 +80,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".IdeaDiscussion"
+            android:name=".Idea.IdeaDiscussion"
             android:label="IdeaDiscussion"
             android:screenOrientation="portrait" >
         </activity>
@@ -101,7 +101,7 @@
 
 
         <service
-            android:name=".ActivityRecognitionIntentService"
+            android:name=".Service.ActivityRecognitionIntentService"
             android:exported="false" >
         </service>
     </application>

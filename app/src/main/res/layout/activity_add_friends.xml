@@ -10,6 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!-- Bug in Android causing first item to be focused, this is a dummy -->
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
@@ -26,7 +33,73 @@
             android.support.v7.cardview:cardCornerRadius="2dp"
             android.support.v7.cardview:cardPreventCornerOverlap="false">
 
-            <TableLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="20sp"
+                android:paddingRight="20sp">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp">
+
+                    <EditText
+                        android:id="@+id/event_name_et"
+                        android:hint="@string/create_event_name_hint"
+                        android:textSize="16sp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:nextFocusUp="@id/event_name_et"
+                        android:nextFocusLeft="@id/event_name_et" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp">
+
+                    <EditText
+                        android:id="@+id/event_details_et"
+                        android:textSize="16sp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:maxLines="3"
+                        android:hint="@string/create_event_description_hint" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp">
+
+                    <TextView
+                        android:text="Image:"
+                        android:textSize="18sp"
+                        android:paddingRight="10sp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".4" />
+
+                    <Spinner
+                        android:id="@+id/event_image_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".6" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!--<TableLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:stretchColumns="1">
@@ -113,7 +186,7 @@
 
                 </TableRow>
 
-            </TableLayout>
+            </TableLayout>-->
 
         </android.support.v7.widget.CardView>
 

@@ -1,8 +1,10 @@
-package edu.villanova.planit;
+package com.austinodell.common;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+
+import edu.villanova.planit.R;
 
 /**
  * Created by aodell on 3/16/15.

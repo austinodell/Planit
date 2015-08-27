@@ -1,4 +1,4 @@
-package edu.villanova.planit;
+package edu.villanova.planit.Idea;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.austinodell.common.ToolbarActivity;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -42,6 +43,13 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.villanova.planit.Comment;
+import edu.villanova.planit.CommentListAdapter;
+import edu.villanova.planit.ImageLib;
+import edu.villanova.planit.R;
+import edu.villanova.planit.SquareImage;
+import edu.villanova.planit.ViewEvent;
 
 
 public class IdeaDiscussion extends ToolbarActivity {

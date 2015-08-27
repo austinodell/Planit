@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.austinodell.common.FullGridView;
+import com.austinodell.common.ToolbarActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -27,6 +29,10 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.villanova.planit.Idea.Idea;
+import edu.villanova.planit.Idea.IdeaDiscussion;
+import edu.villanova.planit.Idea.IdeaListAdapter;
 
 
 public class ViewEvent extends ToolbarActivity {

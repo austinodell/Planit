@@ -1,4 +1,4 @@
-package edu.villanova.planit;
+package edu.villanova.planit.Idea;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,6 +14,9 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.villanova.planit.Idea.Idea;
+import edu.villanova.planit.R;
 
 public class IdeaListAdapter extends BaseAdapter {
     private List<Idea> mIdeaList;

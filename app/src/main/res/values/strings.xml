@@ -40,4 +40,7 @@
     </string-array>
     <string name="title_activity_pick_time">Choose Your Availability</string>
     <string name="title_activity_friend_status">Status of Friends</string>
+
+    <string name="create_event_name_hint">Title of Event</string>
+    <string name="create_event_description_hint">Description (Optional)</string>
 </resources>

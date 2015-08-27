@@ -1,4 +1,4 @@
-package edu.villanova.planit;
+package edu.villanova.planit.Service;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -15,6 +15,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
+
+import edu.villanova.planit.MainActivity;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in

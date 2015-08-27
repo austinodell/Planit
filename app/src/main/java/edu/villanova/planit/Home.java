@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
+import com.austinodell.common.ToolbarActivity;
 import com.facebook.Session;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
@@ -27,6 +28,9 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import edu.villanova.planit.Service.ActivityRecognitionIntentService;
+import edu.villanova.planit.Service.AlarmReceiver;
 
 
 public class Home extends ToolbarActivity implements GoogleApiClient.ConnectionCallbacks {
